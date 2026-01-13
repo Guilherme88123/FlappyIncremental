@@ -93,16 +93,18 @@ public class Flappy : Game
 
             Entities.ForEach(entity => entity.Update(gameTime, EntitiesToAdd));
             Entities.RemoveAll(x => x.IsDestroyed);
+
+            if (PipeDelayAtual < 0)
+            {
+                GerarPipe();
+                PipeDelayAtual = PipeDelay;
+            }
+
+            ValidarScore();
         }
         else if (GameStatus == GameStatusType.MainMenu)
         {
             MenuService.Update(gameTime);
-        }
-
-        if (PipeDelayAtual < 0)
-        {
-            GerarPipe();
-            PipeDelayAtual = PipeDelay;
         }
 
         base.Update(gameTime);
@@ -141,6 +143,10 @@ public class Flappy : Game
         {
             MenuService.DrawMenu();
         }
+        else if (GameStatus == GameStatusType.GameOver)
+        {
+            DrawGameOverTitle();
+        }
 
         GlobalVariables.SpriteBatchEntities.End();
         GlobalVariables.SpriteBatchInterface.End();
@@ -152,6 +158,8 @@ public class Flappy : Game
 
     public async Task GameOver()
     {
+        GameStatus = GameStatusType.GameOver;
+
         await Task.Delay(2000);
 
         Exit();
@@ -162,6 +170,8 @@ public class Flappy : Game
         PipeModel pipeCima = new PipeModel((1920, 0));
         PipeModel pipeBaixo = new PipeModel((1920, 0));
 
+        pipeBaixo.HasScored = true; //Controlar pontuação apenas pelo pipe de cima
+
         int espacoPassagem = 400;
         int rng = new Random().Next(200, 600);
 
@@ -170,6 +180,21 @@ public class Flappy : Game
 
         Entities.Add(pipeCima);
         Entities.Add(pipeBaixo);
+    }
+
+    private void ValidarScore()
+    {
+        foreach (var entity in Entities)
+        {
+            if (entity is PipeModel pipe)
+            {
+                if (!pipe.HasScored && pipe.Position.X + pipe.Size.X < 350)
+                {
+                    Score++;
+                    pipe.HasScored = true;
+                }
+            }
+        }
     }
 
     #endregion
@@ -183,7 +208,25 @@ public class Flappy : Game
 
     public void DrawScore()
     {
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, $"Pontos: {Score}", new Vector2(10, 10), Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, $"Score: {Score}", new Vector2(20, 20), Color.White);
+    }
+
+    public void DrawGameOverTitle()
+    {
+        var width = GlobalVariables.Graphics.PreferredBackBufferWidth;
+        var height = GlobalVariables.Graphics.PreferredBackBufferHeight;
+
+        var text = "Game Over";
+        var finalScore = $"Final Score: {Score}";
+
+        var textSize = GlobalVariables.Font.MeasureString(text);
+        var finalScoreSize = GlobalVariables.Font.MeasureString(finalScore);
+
+        var textPosition = new Vector2((width - textSize.X) / 2, (height - textSize.Y) / 2 - 50);
+        var finalScorePosition = new Vector2((width - finalScoreSize.X) / 2, (height - finalScoreSize.Y) / 2 + 10);
+
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, finalScore, finalScorePosition, Color.White);
     }
 
     #endregion

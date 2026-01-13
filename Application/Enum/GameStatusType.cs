@@ -5,4 +5,5 @@ public enum GameStatusType
     MainMenu,
     Playing,
     Paused,
+    GameOver,
 }

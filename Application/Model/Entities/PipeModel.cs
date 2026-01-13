@@ -6,6 +6,8 @@ namespace Application.Model.Entities;
 
 public class PipeModel : BaseEntityModel
 {
+    public bool HasScored { get; set; }
+
     public PipeModel((float x, float y) position) : base(position)
     {
         Color = Microsoft.Xna.Framework.Color.Green;
