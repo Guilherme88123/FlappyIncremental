@@ -160,7 +160,7 @@ public class Flappy : Game
     {
         GameStatus = GameStatusType.GameOver;
 
-        await Task.Delay(2000);
+        await Task.Delay(3000);
 
         Exit();
     }
@@ -173,7 +173,7 @@ public class Flappy : Game
         pipeBaixo.HasScored = true; //Controlar pontuação apenas pelo pipe de cima
 
         int espacoPassagem = 400;
-        int rng = new Random().Next(200, 600);
+        int rng = new Random().Next(100, 700);
 
         pipeCima.Position = new Vector2(pipeCima.Position.X, rng - pipeCima.Size.Y);
         pipeBaixo.Position = new Vector2(pipeBaixo.Position.X, rng + espacoPassagem);
