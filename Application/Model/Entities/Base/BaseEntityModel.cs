@@ -20,6 +20,7 @@ public abstract class BaseEntityModel
     public bool IsDestroyed { get; set; } = false;
 
     public Rectangle Rectangle => new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
+    public Vector2 Center => new Vector2(Position.X + Size.X / 2, Position.Y + Size.Y / 2);
 
     public Texture2D Sprite {  get; set; } = null;
 

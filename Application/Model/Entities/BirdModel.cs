@@ -2,6 +2,7 @@
 using FlappyIncremental.Model.Entities.Base;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Numerics;
@@ -66,8 +67,31 @@ public class BirdModel : BaseEntityModel
         }
     }
 
+    public override void Draw()
+    {
+        float angulo = GetAngulo();
+
+        var scale = Size / Sprite.Width;
+
+        GlobalVariables.SpriteBatchEntities.Draw(
+            Sprite,
+            Center,
+            null,
+            Color,
+            angulo,
+            new Vector2(0.5f, 0.5f),
+            scale,
+            SpriteEffects.None,
+            0f);
+    }
+
     private void Jump()
     {
         Speed = new(0, -MaxSpeed);
+    }
+
+    private float GetAngulo()
+    {
+        return Speed.Y / MaxSpeed * (float)(Math.PI / 6);
     }
 }
