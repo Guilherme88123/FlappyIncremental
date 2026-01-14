@@ -1,22 +1,26 @@
 ﻿using FlappyIncremental.Dto;
 using FlappyIncremental.Model.Entities.Base;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Numerics;
 
 namespace Application.Model.Entities;
 
 public class BirdModel : BaseEntityModel
 {
-    public const float DelayPulo = 0.1f;
+    public const float DelayPulo = 0.15f;
     public float DelayPuloAtual { get; set; }
+    public bool HasPressedSpace { get; set; }
 
     public BirdModel((float x, float y) position) : base(position)
     {
-        Color = Microsoft.Xna.Framework.Color.Yellow;
+        Sprite = GlobalVariables.Game.Content.Load<Texture2D>("bird");
         Acceleration = 1500f;
         Friction = 1200f;
         MaxSpeed = 400f;
+        Size = new Vector2(80, 80);
     }
 
     public override void Update(Microsoft.Xna.Framework.GameTime gameTime, List<BaseEntityModel> entities)
@@ -26,7 +30,7 @@ public class BirdModel : BaseEntityModel
         if (Rectangle.Bottom >= GlobalVariables.Graphics.PreferredBackBufferHeight ||
             Rectangle.Top <= 0)
         {
-            GlobalVariables.Game.GameOver();
+            _ = GlobalVariables.Game.GameOver();
         }
 
         float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -34,10 +38,18 @@ public class BirdModel : BaseEntityModel
 
         DelayPuloAtual -= delta;
 
-        if (teclado.IsKeyDown(Keys.Space) && DelayPuloAtual < 0)
+        if (teclado.IsKeyDown(Keys.Space))
         {
-            Jump();
-            DelayPuloAtual = DelayPulo;
+            if (DelayPuloAtual < 0 && !HasPressedSpace)
+            {
+                Jump();
+                DelayPuloAtual = DelayPulo;
+                HasPressedSpace = true;
+            }
+        }
+        else
+        {
+            HasPressedSpace = false;
         }
 
         Move(new(0, 1), delta);

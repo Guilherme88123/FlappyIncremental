@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using FlappyIncremental.Dto;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FlappyIncremental.Model.Entities.Base;
 
@@ -19,6 +20,8 @@ public abstract class BaseEntityModel
     public bool IsDestroyed { get; set; } = false;
 
     public Rectangle Rectangle => new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
+
+    public Texture2D Sprite {  get; set; } = null;
 
     protected BaseEntityModel((float x, float y) position)
     {
@@ -45,7 +48,14 @@ public abstract class BaseEntityModel
 
     public virtual void Draw()
     {
-        GlobalVariables.SpriteBatchEntities.Draw(GlobalVariables.Pixel, Rectangle, Color);
+        if (Sprite is not null)
+        {
+            GlobalVariables.SpriteBatchEntities.Draw(Sprite, Rectangle, Color);
+        }
+        else
+        {
+            GlobalVariables.SpriteBatchEntities.Draw(GlobalVariables.Pixel, Rectangle, Color);
+        }
     }
 
     public virtual void Destroy()
