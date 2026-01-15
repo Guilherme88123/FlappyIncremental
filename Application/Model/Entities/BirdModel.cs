@@ -1,5 +1,6 @@
 ﻿using FlappyIncremental.Dto;
 using FlappyIncremental.Model.Entities.Base;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -15,18 +16,24 @@ public class BirdModel : BaseEntityModel
     public float DelayPuloAtual { get; set; }
     public bool HasPressedSpace { get; set; }
 
+    private float ActualAngle { get; set; }
+    private const float MaxAngle = (float)(Math.PI / 6f);
+    private const float RotationSpeed = 10f;
+    
     public BirdModel((float x, float y) position) : base(position)
     {
         Sprite = GlobalVariables.Game.Content.Load<Texture2D>("bird");
         Acceleration = 1500f;
         Friction = 1200f;
         MaxSpeed = 400f;
-        Size = new Vector2(80, 80);
+        Size = new System.Numerics.Vector2(80, 80);
     }
 
     public override void Update(Microsoft.Xna.Framework.GameTime gameTime, List<BaseEntityModel> entities)
     {
         base.Update(gameTime, entities);
+
+        GetAngulo(gameTime);
 
         if (Rectangle.Bottom >= GlobalVariables.Graphics.PreferredBackBufferHeight ||
             Rectangle.Top <= 0)
@@ -69,8 +76,6 @@ public class BirdModel : BaseEntityModel
 
     public override void Draw()
     {
-        float angulo = GetAngulo();
-
         var scale = Size / Sprite.Width;
 
         GlobalVariables.SpriteBatchEntities.Draw(
@@ -78,8 +83,8 @@ public class BirdModel : BaseEntityModel
             Center,
             null,
             Color,
-            angulo,
-            new Vector2(0.5f, 0.5f),
+            ActualAngle,
+            new System.Numerics.Vector2(0.5f, 0.5f),
             scale,
             SpriteEffects.None,
             0f);
@@ -90,8 +95,12 @@ public class BirdModel : BaseEntityModel
         Speed = new(0, -MaxSpeed);
     }
 
-    private float GetAngulo()
+    private void GetAngulo(GameTime gameTime)
     {
-        return Speed.Y / MaxSpeed * (float)(Math.PI / 6);
+        float targetAngle = Speed.Y / MaxSpeed * MaxAngle;
+        targetAngle = Math.Clamp(targetAngle, -MaxAngle, MaxAngle);
+
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        ActualAngle = MathHelper.Lerp(ActualAngle, targetAngle, RotationSpeed * dt);
     }
 }
