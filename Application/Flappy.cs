@@ -171,6 +171,7 @@ public class Flappy : Game
         PipeModel pipeBaixo = new PipeModel((1920, 0));
 
         pipeBaixo.HasScored = true; //Controlar pontuação apenas pelo pipe de cima
+        pipeCima.IsTop = true;
 
         int espacoPassagem = 400;
         int rng = new Random().Next(100, 700);
