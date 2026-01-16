@@ -80,7 +80,7 @@ public class BirdModel : BaseEntityModel
 
         GlobalVariables.SpriteBatchEntities.Draw(
             Sprite,
-            Center,
+            Position,
             null,
             Color,
             ActualAngle,

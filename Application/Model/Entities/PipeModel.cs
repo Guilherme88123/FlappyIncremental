@@ -35,6 +35,8 @@ public class PipeModel : BaseEntityModel
         var scaleX = Size.X / Sprite.Width;
         var scaleY = Size.Y / Sprite.Height;
 
+        SpriteEffects effect = IsTop ? SpriteEffects.FlipVertically : SpriteEffects.None;
+
         GlobalVariables.SpriteBatchEntities.Draw(
             Sprite,
             Position,
@@ -42,9 +44,8 @@ public class PipeModel : BaseEntityModel
             Color,
             0f,
             new System.Numerics.Vector2(0.5f, 0.5f),
-            new Vector2(0.5f, 0.5f),
-            IsTop ? SpriteEffects.FlipVertically : SpriteEffects.None,
+            new Vector2(scaleX, scaleY),
+            effect,
             0f);
-        GlobalVariables.SpriteBatchEntities.Draw(GlobalVariables.Pixel, Rectangle, Color);
     }
 }
