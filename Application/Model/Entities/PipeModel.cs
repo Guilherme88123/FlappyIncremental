@@ -14,7 +14,7 @@ public class PipeModel : BaseEntityModel
     public PipeModel((float x, float y) position) : base(position)
     {
         Sprite = GlobalVariables.Game.Content.Load<Texture2D>("pipe");
-        Size = new Vector2(80, 800);
+        Size = new Vector2(100, 800);
         MaxSpeed = 300f;
     }
 

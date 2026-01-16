@@ -51,7 +51,19 @@ public abstract class BaseEntityModel
     {
         if (Sprite is not null)
         {
-            GlobalVariables.SpriteBatchEntities.Draw(Sprite, Rectangle, Color);
+            var scaleX = Size.X / Sprite.Width;
+            var scaleY = Size.Y / Sprite.Height;
+
+            GlobalVariables.SpriteBatchEntities.Draw(
+                Sprite,
+                Position,
+                null,
+                Color,
+                0f,
+                new System.Numerics.Vector2(0.5f, 0.5f),
+                new Vector2(scaleX, scaleY),
+                SpriteEffects.None,
+                0f);
         }
         else
         {
