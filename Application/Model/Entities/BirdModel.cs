@@ -38,7 +38,8 @@ public class BirdModel : BaseEntityModel
         if (Rectangle.Bottom >= GlobalVariables.Graphics.PreferredBackBufferHeight ||
             Rectangle.Top <= 0)
         {
-            _ = GlobalVariables.Game.GameOver();
+            Destroy();
+            GlobalVariables.Game.ActualScreen.Exit();
         }
 
         float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -70,7 +71,7 @@ public class BirdModel : BaseEntityModel
         if (model is PipeModel pipe)
         {
             Destroy();
-            _ = GlobalVariables.Game.GameOver();
+            GlobalVariables.Game.ActualScreen.Exit();
         }
     }
 
