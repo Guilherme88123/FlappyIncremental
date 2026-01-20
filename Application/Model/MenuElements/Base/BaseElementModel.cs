@@ -1,5 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using FlappyIncremental.Dto;
+﻿using FlappyIncremental.Dto;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Application.Model.MenuElements.Base;
@@ -8,10 +9,15 @@ public class BaseElementModel
 {
     public Rectangle Rectangle { get; set; } = new(0, 0, 100, 50);
     public Color Color { get; set; } = Color.Gray;
-    public Color HoverColor => Color * 1.2f;
     public string Text { get; set; }
-    public Action Click { get; set; }
+
     public bool IsHover { get; set; } = false;
+    public Color HoverColor => Color * 1.2f;
+
+    public Action Click { get; set; }
+
+    public const float Delay = 0.3f;
+    public float DelayAtual { get; set; }
 
     public void Draw(int x, int y)
     {
@@ -25,6 +31,30 @@ public class BaseElementModel
                 x + (Rectangle.Width - textSize.X) / 2,
                 y + (Rectangle.Height - textSize.Y) / 2);
             GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, Text, textPosition, Color.Black);
+        }
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var mouse = Mouse.GetState();
+        var mousePos = new Point(mouse.X, mouse.Y);
+
+        DelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        var hovering = Rectangle.Contains(mousePos);
+        if (hovering)
+        {
+            IsHover = true;
+
+            if (mouse.LeftButton == ButtonState.Pressed && DelayAtual < 0)
+            {
+                Click?.Invoke();
+                DelayAtual = Delay;
+            }
+        }
+        else
+        {
+            IsHover = false;
         }
     }
 

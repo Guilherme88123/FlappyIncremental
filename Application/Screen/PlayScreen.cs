@@ -3,6 +3,7 @@ using Application.Enum;
 using Application.Interface.Menu;
 using Application.Interface.Screen;
 using Application.Model.Entities;
+using Application.Model.MenuElements.Base;
 using FlappyIncremental.Dto;
 using FlappyIncremental.Model.Entities.Base;
 using Microsoft.Xna.Framework;
@@ -30,6 +31,8 @@ public class PlayScreen : IScreen
     private float PipeDelay = 3f;
     private float PipeDelayAtual = 0f;
 
+    private float GameOverDelay = 3f;
+
     public int Score { get; set; } = 0;
 
     private GameStatusType GameStatus = GameStatusType.Playing;
@@ -52,41 +55,53 @@ public class PlayScreen : IScreen
 
     public void Update(GameTime gameTime)
     {
-        var teclado = Keyboard.GetState();
-        if (teclado.IsKeyDown(Keys.Escape) && EscDelayAtual < 0)
+        if (GameStatus != GameStatusType.GameOver)
         {
-            GameStatus = GameStatus == GameStatusType.MainMenu ? GameStatusType.Playing : GameStatusType.MainMenu;
-            EscDelayAtual = EscDelay;
-        }
-
-        EscDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-        if (GameStatus == GameStatusType.Playing)
-        {
-            PipeDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (EntitiesToAdd.Any())
+            var teclado = Keyboard.GetState();
+            if (teclado.IsKeyDown(Keys.Escape) && EscDelayAtual < 0)
             {
-                Entities.AddRange(EntitiesToAdd);
-                EntitiesToAdd.Clear();
+                GameStatus = GameStatus == GameStatusType.Paused ? GameStatusType.Playing : GameStatusType.Paused;
+                EscDelayAtual = EscDelay;
             }
 
-            VerifyCollision();
+            EscDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            Entities.ForEach(entity => entity.Update(gameTime, EntitiesToAdd));
-            Entities.RemoveAll(x => x.IsDestroyed);
-
-            if (PipeDelayAtual < 0)
+            if (GameStatus == GameStatusType.Playing)
             {
-                GerarPipe();
-                PipeDelayAtual = PipeDelay;
-            }
+                PipeDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            ValidarScore();
+                if (EntitiesToAdd.Any())
+                {
+                    Entities.AddRange(EntitiesToAdd);
+                    EntitiesToAdd.Clear();
+                }
+
+                VerifyCollision();
+
+                Entities.ForEach(entity => entity.Update(gameTime, EntitiesToAdd));
+                Entities.RemoveAll(x => x.IsDestroyed);
+
+                if (PipeDelayAtual < 0)
+                {
+                    GerarPipe();
+                    PipeDelayAtual = PipeDelay;
+                }
+
+                ValidarScore();
+            }
+            else if (GameStatus == GameStatusType.Paused)
+            {
+                MenuService.Update(gameTime);
+            }
         }
-        else if (GameStatus == GameStatusType.MainMenu)
+        else
         {
-            MenuService.Update(gameTime);
+            GameOverDelay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (GameOverDelay < 0)
+            {
+                GlobalVariables.Game.ChangeScreen(ScreenCodesConst.MenuScreen);
+            }
         }
     }
 
@@ -149,23 +164,17 @@ public class PlayScreen : IScreen
     {
         GlobalVariables.Graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        GlobalVariables.SpriteBatchEntities.Begin();
-        GlobalVariables.SpriteBatchInterface.Begin();
-
         Entities.ForEach(x => x.Draw());
         DrawScore();
 
-        if (GameStatus == GameStatusType.MainMenu)
+        if (GameStatus == GameStatusType.Paused)
         {
-            MenuService.DrawMenu();
+            DrawPausedInterface();
         }
         else if (GameStatus == GameStatusType.GameOver)
         {
             DrawGameOverTitle();
         }
-
-        GlobalVariables.SpriteBatchEntities.End();
-        GlobalVariables.SpriteBatchInterface.End();
     }
 
     public void DrawInterface()
@@ -196,6 +205,11 @@ public class PlayScreen : IScreen
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, finalScore, finalScorePosition, Color.White);
     }
 
+    public void DrawPausedInterface()
+    {
+
+    }
+
     #endregion
 
     #region Exit
@@ -203,10 +217,6 @@ public class PlayScreen : IScreen
     public void Exit()
     {
         GameStatus = GameStatusType.GameOver;
-
-        Task.Delay(3000).Wait();
-
-        GlobalVariables.Game.ChangeScreen(ScreenCodesConst.MenuScreen);
     }
 
     #endregion

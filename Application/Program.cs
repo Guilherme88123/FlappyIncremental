@@ -14,6 +14,9 @@ services.AddSingleton<IMenuService, MenuService>();
 services.AddTransient<IScreen, PlayScreen>();
 services.AddTransient<IScreen, MenuScreen>();
 
+services.AddTransient<PlayScreen>();
+services.AddTransient<MenuScreen>();
+
 #endregion
 
 var provider = services.BuildServiceProvider();

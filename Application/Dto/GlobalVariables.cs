@@ -22,4 +22,6 @@ public static class GlobalVariables
 
     public static T GetService<T>() where T : notnull
         => ServiceProvider.GetRequiredService<T>();
+
+    public static object GetService(Type type) => ServiceProvider.GetRequiredService(type);
 }

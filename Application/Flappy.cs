@@ -17,10 +17,10 @@ namespace FlappyIncremental;
 
 public class Flappy : Game
 {
-    public Dictionary<string, IScreen> Screens = new();
+    public Dictionary<string, Type> Screens = new();
     public IScreen ActualScreen { get; set; } = null;
 
-    public string InitialScreenCode = ScreenCodesConst.PlayScreen;
+    public string InitialScreenCode = ScreenCodesConst.MenuScreen;
 
     public Flappy()
     {
@@ -53,7 +53,7 @@ public class Flappy : Game
 
     protected override void Initialize()
     {
-        Screens = GlobalVariables.GetService<IEnumerable<IScreen>>().ToDictionary(x => x.ScreenCode, x => x);
+        Screens = GlobalVariables.GetService<IEnumerable<IScreen>>().ToDictionary(x => x.ScreenCode, x => x.GetType());
         ChangeScreen(InitialScreenCode);
 
         base.Initialize();
@@ -68,7 +68,15 @@ public class Flappy : Game
 
     protected override void Draw(GameTime gameTime)
     {
+        GlobalVariables.Graphics.GraphicsDevice.Clear(Color.White);
+
+        GlobalVariables.SpriteBatchEntities.Begin();
+        GlobalVariables.SpriteBatchInterface.Begin();
+
         ActualScreen.Draw();
+
+        GlobalVariables.SpriteBatchEntities.End();
+        GlobalVariables.SpriteBatchInterface.End();
 
         base.Draw(gameTime);
     }
@@ -79,12 +87,12 @@ public class Flappy : Game
         {
             if (ActualScreen is not null) ActualScreen.Exit();
 
-            if (!Screens.TryGetValue(screenCode, out var screen))
+            if (!Screens.TryGetValue(screenCode, out var screenType))
             {
                 throw new Exception($"Screen with code {screenCode} not found.");
             }
 
-            ActualScreen = screen;
+            ActualScreen = (IScreen)GlobalVariables.GetService(screenType);
 
             ActualScreen.Initialize();
         }
