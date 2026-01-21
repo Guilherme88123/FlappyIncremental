@@ -13,6 +13,7 @@ public static class GlobalVariables
     public static Texture2D Pixel;
     public static SpriteFont Font;
 
+    public static SpriteBatch SpriteBatchBackground;
     public static SpriteBatch SpriteBatchEntities;
     public static SpriteBatch SpriteBatchInterface;
 

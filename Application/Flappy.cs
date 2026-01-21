@@ -39,6 +39,7 @@ public class Flappy : Game
 
     protected override void LoadContent()
     {
+        var spriteBatchBackground = new SpriteBatch(GraphicsDevice);
         var spriteBatchEntities = new SpriteBatch(GraphicsDevice);
         var spriteBatchInterface = new SpriteBatch(GraphicsDevice);
 
@@ -46,6 +47,7 @@ public class Flappy : Game
         pixel.SetData([Color.White]);
 
         GlobalVariables.Font = Content.Load<SpriteFont>("DefaultFont");
+        GlobalVariables.SpriteBatchBackground = spriteBatchBackground;
         GlobalVariables.SpriteBatchEntities = spriteBatchEntities;
         GlobalVariables.SpriteBatchInterface = spriteBatchInterface;
         GlobalVariables.Pixel = pixel;
@@ -70,11 +72,13 @@ public class Flappy : Game
     {
         GlobalVariables.Graphics.GraphicsDevice.Clear(Color.White);
 
+        GlobalVariables.SpriteBatchBackground.Begin();
         GlobalVariables.SpriteBatchEntities.Begin();
         GlobalVariables.SpriteBatchInterface.Begin();
 
         ActualScreen.Draw();
 
+        GlobalVariables.SpriteBatchBackground.End();
         GlobalVariables.SpriteBatchEntities.End();
         GlobalVariables.SpriteBatchInterface.End();
 
