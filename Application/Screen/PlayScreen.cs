@@ -162,7 +162,7 @@ public class PlayScreen : IScreen
 
     public void Draw()
     {
-        GlobalVariables.Graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+        GlobalVariables.Graphics.GraphicsDevice.Clear(Color.Black);
 
         Entities.ForEach(x => x.Draw());
         DrawScore();

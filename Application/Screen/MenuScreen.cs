@@ -14,8 +14,11 @@ public class MenuScreen : IScreen
 {
     public string ScreenCode => ScreenCodesConst.MenuScreen;
 
-    private List<BaseElementModel> ListaBotoesPaused { get; set; } = new();
+    private List<BaseElementModel> ListaBotoes { get; set; } = new();
+    private List<BaseElementModel> ListaBotoesOptions { get; set; } = new();
     public Texture2D Background { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("background");
+
+    public bool IsOptionsEnable { get; set; }
 
     #region Initialize
 
@@ -38,18 +41,26 @@ public class MenuScreen : IScreen
         {
             Rectangle = new(x, y, width, height),
             Click = () => StartGame(),
-            Text = "Start Game",
+            Text = "Start",
+        };
+
+        var botaoOpcoes = new BaseElementModel()
+        {
+            Rectangle = new(x, y + (height + 10), width, height),
+            Click = () => ToggleOptions(),
+            Text = "Options",
         };
 
         var botaoExit = new BaseElementModel()
         {
-            Rectangle = new(x, y + height + 10, width, height),
+            Rectangle = new(x, y + (height + 10) * 2, width, height),
             Click = () => GlobalVariables.Game.Exit(),
             Text = "Exit",
         };
 
-        ListaBotoesPaused.Add(botaoStart);
-        ListaBotoesPaused.Add(botaoExit);
+        ListaBotoes.Add(botaoStart);
+        ListaBotoes.Add(botaoOpcoes);
+        ListaBotoes.Add(botaoExit);
     }
 
     #endregion
@@ -58,12 +69,22 @@ public class MenuScreen : IScreen
 
     public void Update(GameTime gameTime)
     {
-        ListaBotoesPaused.ForEach(x => x.Update(gameTime));
+        ListaBotoes.ForEach(x => x.Update(gameTime));
+
+        if (IsOptionsEnable)
+        {
+            ListaBotoesOptions.ForEach(x => x.Update(gameTime));
+        }
     }
 
     public static void StartGame()
     {
         GlobalVariables.Game.ChangeScreen(ScreenCodesConst.PlayScreen);
+    }
+
+    public void ToggleOptions()
+    {
+        IsOptionsEnable = !IsOptionsEnable;
     }
 
     #endregion
@@ -74,10 +95,15 @@ public class MenuScreen : IScreen
     {
         DrawBackground();
 
-        ListaBotoesPaused.ForEach(x => x.Draw());
+        ListaBotoes.ForEach(x => x.Draw());
 
         DrawVersionText();
         DrawTitle();
+
+        if (IsOptionsEnable)
+        {
+            DrawOptionsMenu();
+        }
     }
 
     public void DrawBackground()
@@ -135,6 +161,11 @@ public class MenuScreen : IScreen
 
         GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, rect, Color.Gray);
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
+    }
+
+    public void DrawOptionsMenu()
+    {
+        ListaBotoesOptions.ForEach(x => x.Draw());
     }
 
     #endregion
