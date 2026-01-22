@@ -6,7 +6,6 @@ using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Drawing;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Application.Screen;
@@ -74,8 +73,11 @@ public class MenuScreen : IScreen
     public void Draw()
     {
         DrawBackground();
+
         ListaBotoesPaused.ForEach(x => x.Draw());
+
         DrawVersionText();
+        DrawTitle();
     }
 
     public void DrawBackground()
@@ -104,10 +106,35 @@ public class MenuScreen : IScreen
 
         var textSize = GlobalVariables.Font.MeasureString(text);
 
-        var textPosition = new Vector2(10, height - 50);
+        var textPosition = new Vector2(15, height - 55);
 
+        var border = 5;
+        var rect = new Rectangle((int)textPosition.X - border, (int)textPosition.Y - border, (int)textSize.X + border * 2, (int)textSize.Y + border * 2);
+
+        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, rect, Color.Gray);
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, 
             Microsoft.Xna.Framework.Color.White);
+    }
+
+    public void DrawTitle()
+    {
+        var width = GlobalVariables.Graphics.PreferredBackBufferWidth;
+        var height = GlobalVariables.Graphics.PreferredBackBufferHeight;
+
+        var text = Configuration.Title;
+
+        var textSize = GlobalVariables.Font.MeasureString(text);
+
+        var x = width / 2 - textSize.X / 2;
+        var y = 300;
+
+        var textPosition = new Vector2(x, y);
+
+        var border = 10;
+        var rect = new Rectangle((int)x - border, y - border, (int)textSize.X + border * 2, (int)textSize.Y + border * 2);
+
+        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, rect, Color.Gray);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
     }
 
     #endregion

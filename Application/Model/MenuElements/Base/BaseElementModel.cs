@@ -30,7 +30,7 @@ public class BaseElementModel
             var textPosition = new Vector2(
                 x + (Rectangle.Width - textSize.X) / 2,
                 y + (Rectangle.Height - textSize.Y) / 2);
-            GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, Text, textPosition, Color.Black);
+            GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, Text, textPosition, Color.White);
         }
     }
 
