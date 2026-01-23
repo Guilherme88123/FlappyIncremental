@@ -5,8 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Net.Mime;
-using System.Numerics;
 
 namespace Application.Model.Entities;
 
@@ -79,13 +77,14 @@ public class BirdModel : BaseEntityModel
     {
         var scale = Size / Sprite.Width;
 
+        //GlobalVariables.SpriteBatchEntities.Draw(GlobalVariables.Pixel, Rectangle, Color);
         GlobalVariables.SpriteBatchEntities.Draw(
             Sprite,
             Position,
             null,
             Color,
             ActualAngle,
-            new System.Numerics.Vector2(0.5f, 0.5f),
+            new Vector2(0.5f, 0.5f),
             scale,
             SpriteEffects.None,
             0f);

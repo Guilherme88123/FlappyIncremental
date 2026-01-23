@@ -108,6 +108,11 @@ public class MenuScreen : IScreen
 
     public void DrawBackground()
     {
+        var color = new Color(25, 25, 20);
+        GlobalVariables.Graphics.GraphicsDevice.Clear(color);
+
+        return;
+
         var scaleX = (float)GlobalVariables.Graphics.PreferredBackBufferWidth / Background.Width;
         var scaleY = (float)GlobalVariables.Graphics.PreferredBackBufferHeight / Background.Height;
 
@@ -130,14 +135,8 @@ public class MenuScreen : IScreen
 
         var text = Configuration.Version;
 
-        var textSize = GlobalVariables.Font.MeasureString(text);
-
         var textPosition = new Vector2(15, height - 55);
 
-        var border = 5;
-        var rect = new Rectangle((int)textPosition.X - border, (int)textPosition.Y - border, (int)textSize.X + border * 2, (int)textSize.Y + border * 2);
-
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, rect, Color.Gray);
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, 
             Microsoft.Xna.Framework.Color.White);
     }
@@ -156,10 +155,10 @@ public class MenuScreen : IScreen
 
         var textPosition = new Vector2(x, y);
 
-        var border = 10;
+        var border = 20;
         var rect = new Rectangle((int)x - border, y - border, (int)textSize.X + border * 2, (int)textSize.Y + border * 2);
 
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, rect, Color.Gray);
+        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, rect, Color.Red);
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
     }
 

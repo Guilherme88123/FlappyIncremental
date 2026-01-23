@@ -8,11 +8,11 @@ namespace Application.Model.MenuElements.Base;
 public class BaseElementModel
 {
     public Rectangle Rectangle { get; set; } = new(0, 0, 100, 50);
-    public Color Color { get; set; } = Color.Gray;
+    public Color Color { get; set; } = Color.Red;
     public string Text { get; set; }
 
     public bool IsHover { get; set; } = false;
-    public Color HoverColor => Color * 1.2f;
+    public Color HoverColor => Color * 0.1f;
 
     public Action Click { get; set; }
 
