@@ -27,7 +27,7 @@ public class Flappy : Game
         var graphics = new GraphicsDeviceManager(this);
         graphics.PreferredBackBufferWidth = 1920;
         graphics.PreferredBackBufferHeight = 1080;
-        //graphics.IsFullScreen = true;
+        graphics.IsFullScreen = true;
         IsFixedTimeStep = true;
         TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d);
         Content.RootDirectory = "Content";
@@ -70,7 +70,8 @@ public class Flappy : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GlobalVariables.Graphics.GraphicsDevice.Clear(Color.White);
+        var color = new Color(25, 25, 20);
+        GlobalVariables.Graphics.GraphicsDevice.Clear(color);
 
         GlobalVariables.SpriteBatchBackground.Begin();
         GlobalVariables.SpriteBatchEntities.Begin();

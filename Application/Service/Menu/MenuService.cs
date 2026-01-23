@@ -43,7 +43,7 @@ public class MenuService : IMenuService
             var element = MenuElements[i];
             var elementX = Rectangle.X + (Rectangle.Width / 2) - (element.Rectangle.Width / 2);
             var elementY = Rectangle.Y + 20 + (i * (element.Rectangle.Height + 10));
-            element.Draw(elementX, elementY);
+            element.Draw();
         }
     }
 

@@ -162,9 +162,6 @@ public class PlayScreen : IScreen
 
     public void Draw()
     {
-        var color = new Color(25, 25, 25);
-        GlobalVariables.Graphics.GraphicsDevice.Clear(color);
-
         Entities.ForEach(x => x.Draw());
         DrawScore();
 

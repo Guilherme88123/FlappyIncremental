@@ -16,7 +16,8 @@ public class MenuScreen : IScreen
 
     private List<BaseElementModel> ListaBotoes { get; set; } = new();
     private List<BaseElementModel> ListaBotoesOptions { get; set; } = new();
-    public Texture2D Background { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("background");
+    public Texture2D Title { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("title");
+    public Texture2D OverlayButton { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("button_overlay");
 
     public bool IsOptionsEnable { get; set; }
 
@@ -33,7 +34,7 @@ public class MenuScreen : IScreen
         var telaHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
 
         var width = 400;
-        var height = 50;
+        var height = 80;
         var x = telaWidth / 2 - width / 2;
         var y = (int)(telaHeight / 1.5 - height / 2);
 
@@ -42,6 +43,8 @@ public class MenuScreen : IScreen
             Rectangle = new(x, y, width, height),
             Click = () => StartGame(),
             Text = "Start",
+            Overlay = OverlayButton,
+            Color = Color.White,
         };
 
         var botaoOpcoes = new BaseElementModel()
@@ -49,6 +52,8 @@ public class MenuScreen : IScreen
             Rectangle = new(x, y + (height + 10), width, height),
             Click = () => ToggleOptions(),
             Text = "Options",
+            Overlay = OverlayButton,
+            Color = Color.White,
         };
 
         var botaoExit = new BaseElementModel()
@@ -56,6 +61,8 @@ public class MenuScreen : IScreen
             Rectangle = new(x, y + (height + 10) * 2, width, height),
             Click = () => GlobalVariables.Game.Exit(),
             Text = "Exit",
+            Overlay = OverlayButton,
+            Color = Color.White,
         };
 
         ListaBotoes.Add(botaoStart);
@@ -93,8 +100,6 @@ public class MenuScreen : IScreen
 
     public void Draw()
     {
-        DrawBackground();
-
         ListaBotoes.ForEach(x => x.Draw());
 
         DrawVersionText();
@@ -104,28 +109,6 @@ public class MenuScreen : IScreen
         {
             DrawOptionsMenu();
         }
-    }
-
-    public void DrawBackground()
-    {
-        var color = new Color(25, 25, 20);
-        GlobalVariables.Graphics.GraphicsDevice.Clear(color);
-
-        return;
-
-        var scaleX = (float)GlobalVariables.Graphics.PreferredBackBufferWidth / Background.Width;
-        var scaleY = (float)GlobalVariables.Graphics.PreferredBackBufferHeight / Background.Height;
-
-        GlobalVariables.SpriteBatchBackground.Draw(
-            Background,
-            new Vector2(0, 0),
-            null,
-            Microsoft.Xna.Framework.Color.White,
-            0f,
-            new System.Numerics.Vector2(0.5f, 0.5f),
-            new Vector2(scaleX, scaleY),
-            SpriteEffects.None,
-            0f);
     }
 
     public void DrawVersionText()
@@ -146,20 +129,21 @@ public class MenuScreen : IScreen
         var width = GlobalVariables.Graphics.PreferredBackBufferWidth;
         var height = GlobalVariables.Graphics.PreferredBackBufferHeight;
 
-        var text = Configuration.Title;
-
-        var textSize = GlobalVariables.Font.MeasureString(text);
-
-        var x = width / 2 - textSize.X / 2;
+        var x = width / 2 - Title.Width / 2;
         var y = 300;
 
-        var textPosition = new Vector2(x, y);
+        var titlePosition = new Vector2(x, y);
 
-        var border = 20;
-        var rect = new Rectangle((int)x - border, y - border, (int)textSize.X + border * 2, (int)textSize.Y + border * 2);
-
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, rect, Color.Red);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
+        GlobalVariables.SpriteBatchEntities.Draw(
+            Title,
+            titlePosition,
+            null,
+            Color.White,
+            0f,
+            new Vector2(0.5f, 0.5f),
+            new Vector2(1, 1),
+            SpriteEffects.None,
+            0f);
     }
 
     public void DrawOptionsMenu()

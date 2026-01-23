@@ -1,5 +1,6 @@
 ﻿using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
@@ -12,27 +13,14 @@ public class BaseElementModel
     public string Text { get; set; }
 
     public bool IsHover { get; set; } = false;
-    public Color HoverColor => Color * 0.1f;
+    public Color HoverColor => Color * 0.7f;
 
     public Action Click { get; set; }
 
     public const float Delay = 0.3f;
     public float DelayAtual { get; set; }
 
-    public void Draw(int x, int y)
-    {
-        Rectangle = new(x, y, Rectangle.Width, Rectangle.Height);
-
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, new Rectangle(x, y, Rectangle.Width, Rectangle.Height), IsHover ? HoverColor : Color);
-        if (!string.IsNullOrEmpty(Text))
-        {
-            var textSize = GlobalVariables.Font.MeasureString(Text);
-            var textPosition = new Vector2(
-                x + (Rectangle.Width - textSize.X) / 2,
-                y + (Rectangle.Height - textSize.Y) / 2);
-            GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, Text, textPosition, Color.White);
-        }
-    }
+    public Texture2D Overlay { get; set; } = null;
 
     public void Update(GameTime gameTime)
     {
@@ -60,6 +48,51 @@ public class BaseElementModel
 
     public void Draw()
     {
-        Draw(Rectangle.X, Rectangle.Y);
+        if (Overlay != null)
+        {
+            DrawOverlay();
+        }
+        else
+        {
+            DrawRectangle();
+        }
+
+        if (!string.IsNullOrEmpty(Text))
+        {
+            DrawText();
+        }
+    }
+
+    public void DrawText()
+    {
+        var textSize = GlobalVariables.Font.MeasureString(Text);
+        var textPosition = new Vector2(
+            Rectangle.X + (Rectangle.Width - textSize.X) / 2,
+            Rectangle.Y + (Rectangle.Height - textSize.Y) / 2);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, Text, textPosition, Color.White);
+    }
+
+    public void DrawRectangle()
+    {
+        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, Rectangle, IsHover ? HoverColor : Color);
+    }
+
+    public void DrawOverlay()
+    {
+        var scaleX = (float)Rectangle.Width / (float)Overlay.Width;
+        var scaleY = (float)Rectangle.Height / (float)Overlay.Height;
+
+        var position = new Vector2(Rectangle.X, Rectangle.Y);
+
+        GlobalVariables.SpriteBatchEntities.Draw(
+            Overlay,
+            position,
+            null,
+            IsHover ? HoverColor : Color,
+            0f,
+            new Vector2(0.5f, 0.5f),
+            new Vector2(scaleX, scaleY),
+            SpriteEffects.None,
+            0f);
     }
 }
