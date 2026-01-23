@@ -148,7 +148,33 @@ public class MenuScreen : IScreen
 
     public void DrawOptionsMenu()
     {
+        DrawMenu();
         ListaBotoesOptions.ForEach(x => x.Draw());
+    }
+
+    public void DrawMenu()
+    {
+        var totalWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
+        var totalHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+
+        var width = totalWidth / 3f;
+        var height = totalHeight / 1.2f;
+
+        var x = totalWidth / 2 - width / 2;
+        var y = totalHeight / 2 - height / 2;
+
+        var titlePosition = new Vector2(x, y);
+
+        GlobalVariables.SpriteBatchEntities.Draw(
+            Title,
+            titlePosition,
+            null,
+            Color.White,
+            0f,
+            new Vector2(0.5f, 0.5f),
+            new Vector2(1, 1),
+            SpriteEffects.None,
+            0f);
     }
 
     #endregion
