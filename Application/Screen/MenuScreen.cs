@@ -34,9 +34,9 @@ public class MenuScreen : IScreen
         var telaHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
 
         var width = 400;
-        var height = 80;
+        var height = 100;
         var x = telaWidth / 2 - width / 2;
-        var y = (int)(telaHeight / 1.5 - height / 2);
+        var y = (int)(telaHeight / 1.6 - height / 2);
 
         var botaoStart = new BaseElementModel()
         {
@@ -118,7 +118,7 @@ public class MenuScreen : IScreen
 
         var text = Configuration.Version;
 
-        var textPosition = new Vector2(15, height - 55);
+        var textPosition = new Vector2(15, height - 25);
 
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, 
             Microsoft.Xna.Framework.Color.White);
@@ -130,7 +130,7 @@ public class MenuScreen : IScreen
         var height = GlobalVariables.Graphics.PreferredBackBufferHeight;
 
         var x = width / 2 - Title.Width / 2;
-        var y = 300;
+        var y = 250;
 
         var titlePosition = new Vector2(x, y);
 

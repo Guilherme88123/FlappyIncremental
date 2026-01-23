@@ -14,7 +14,6 @@ public class BirdModel : BaseEntityModel
     public float DelayPuloAtual { get; set; }
     public bool HasPressedSpace { get; set; }
 
-    private float ActualAngle { get; set; }
     private const float MaxAngle = (float)(Math.PI / 6f);
     private const float RotationSpeed = 10f;
     
@@ -24,7 +23,7 @@ public class BirdModel : BaseEntityModel
         Acceleration = 1500f;
         Friction = 1200f;
         MaxSpeed = 400f;
-        Size = new System.Numerics.Vector2(80, 80);
+        Size = new System.Numerics.Vector2(80, 52);
     }
 
     public override void Update(Microsoft.Xna.Framework.GameTime gameTime, List<BaseEntityModel> entities)
@@ -71,23 +70,6 @@ public class BirdModel : BaseEntityModel
             Destroy();
             GlobalVariables.Game.ActualScreen.Exit();
         }
-    }
-
-    public override void Draw()
-    {
-        var scale = Size / Sprite.Width;
-
-        //GlobalVariables.SpriteBatchEntities.Draw(GlobalVariables.Pixel, Rectangle, Color);
-        GlobalVariables.SpriteBatchEntities.Draw(
-            Sprite,
-            Position,
-            null,
-            Color,
-            ActualAngle,
-            new Vector2(0.5f, 0.5f),
-            scale,
-            SpriteEffects.None,
-            0f);
     }
 
     private void Jump()

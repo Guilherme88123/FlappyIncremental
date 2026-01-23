@@ -17,6 +17,9 @@ public abstract class BaseEntityModel
     public float MaxSpeed { get; set; }
     public Vector2 Direction { get; set; } = new();
 
+    protected float ActualAngle { get; set; } = 0f;
+    protected SpriteEffects DrawEffect { get; set; } = SpriteEffects.None;
+
     public bool IsDestroyed { get; set; } = false;
 
     public Rectangle Rectangle => new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
@@ -59,10 +62,10 @@ public abstract class BaseEntityModel
                 Position,
                 null,
                 Color,
-                0f,
-                new System.Numerics.Vector2(0.5f, 0.5f),
+                ActualAngle,
+                new Vector2(0.5f, 0.5f),
                 new Vector2(scaleX, scaleY),
-                SpriteEffects.None,
+                DrawEffect,
                 0f);
         }
         else

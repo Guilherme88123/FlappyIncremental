@@ -32,20 +32,8 @@ public class PipeModel : BaseEntityModel
 
     public override void Draw()
     {
-        var scaleX = Size.X / Sprite.Width;
-        var scaleY = Size.Y / Sprite.Height;
+        DrawEffect = IsTop ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
-        SpriteEffects effect = IsTop ? SpriteEffects.FlipVertically : SpriteEffects.None;
-
-        GlobalVariables.SpriteBatchEntities.Draw(
-            Sprite,
-            Position,
-            null,
-            Color,
-            0f,
-            new System.Numerics.Vector2(0.5f, 0.5f),
-            new Vector2(scaleX, scaleY),
-            effect,
-            0f);
+        base.Draw();
     }
 }
