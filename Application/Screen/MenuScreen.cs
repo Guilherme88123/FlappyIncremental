@@ -20,6 +20,7 @@ public class MenuScreen : IScreen
     public Texture2D OverlayButton { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("button_overlay");
     public Texture2D OverlaySquareButton { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("square_button_overlay");
     public Texture2D OverlayMenu { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("menu_overlay");
+    private Rectangle OptionsMenuRect { get; set; }
 
     public bool IsOptionsEnable { get; set; }
 
@@ -82,6 +83,8 @@ public class MenuScreen : IScreen
         var heightMenu = totalHeight / 1.2f;
         var xMenu = totalWidth / 2 - widthMenu / 2;
         var yMenu = totalHeight / 2 - heightMenu / 2;
+
+        OptionsMenuRect = new((int)xMenu, (int)yMenu, (int)widthMenu, (int)heightMenu);
 
         var widthCloseButton = widthMenu / 10f;
         var xCloseButton = xMenu + widthMenu - widthCloseButton;
@@ -185,23 +188,14 @@ public class MenuScreen : IScreen
 
     public void DrawMenu()
     {
-        var totalWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
-        var totalHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+        var scaleX = (float)OptionsMenuRect.Width / OverlayMenu.Width;
+        var scaleY = (float)OptionsMenuRect.Height / OverlayMenu.Height;
 
-        var width = totalWidth / 2.9f;
-        var height = totalHeight / 1.2f;
-
-        var x = totalWidth / 2 - width / 2;
-        var y = totalHeight / 2 - height / 2;
-
-        var scaleX = width / OverlayMenu.Width;
-        var scaleY = height / OverlayMenu.Height;
-
-        var titlePosition = new Vector2(x, y);
+        var overlayPosition = new Vector2(OptionsMenuRect.X, OptionsMenuRect.Y);
 
         GlobalVariables.SpriteBatchInterface.Draw(
             OverlayMenu,
-            titlePosition,
+            overlayPosition,
             null,
             Color.White,
             0f,

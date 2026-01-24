@@ -21,6 +21,8 @@ public static class GlobalVariables
 
     public static IServiceProvider ServiceProvider { get; set; }
 
+    public static bool IsMouseDown { get; set; }
+
     public static T GetService<T>() where T : notnull
         => ServiceProvider.GetRequiredService<T>();
 
