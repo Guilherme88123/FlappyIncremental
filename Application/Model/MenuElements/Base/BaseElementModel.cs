@@ -34,7 +34,9 @@ public class BaseElementModel
         {
             IsHover = true;
 
-            if (mouse.LeftButton == ButtonState.Pressed && DelayAtual < 0)
+            if (mouse.LeftButton == ButtonState.Pressed && 
+                DelayAtual < 0 &&
+                !GlobalVariables.IsMouseDown)
             {
                 Click?.Invoke();
                 DelayAtual = Delay;

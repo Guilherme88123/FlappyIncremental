@@ -65,7 +65,16 @@ public class Flappy : Game
     {
         ActualScreen.Update(gameTime);
 
+        UpdateMouseState();
+        
         base.Update(gameTime);
+    }
+
+    private void UpdateMouseState()
+    {
+        var mouse = Mouse.GetState();
+
+        GlobalVariables.IsMouseDown = mouse.LeftButton == ButtonState.Pressed;
     }
 
     protected override void Draw(GameTime gameTime)
