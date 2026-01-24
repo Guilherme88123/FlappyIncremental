@@ -84,7 +84,7 @@ public class BaseElementModel
 
         var position = new Vector2(Rectangle.X, Rectangle.Y);
 
-        GlobalVariables.SpriteBatchEntities.Draw(
+        GlobalVariables.SpriteBatchInterface.Draw(
             Overlay,
             position,
             null,

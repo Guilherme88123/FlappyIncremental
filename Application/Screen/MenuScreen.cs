@@ -18,6 +18,8 @@ public class MenuScreen : IScreen
     private List<BaseElementModel> ListaBotoesOptions { get; set; } = new();
     public Texture2D Title { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("title");
     public Texture2D OverlayButton { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("button_overlay");
+    public Texture2D OverlaySquareButton { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("square_button_overlay");
+    public Texture2D OverlayMenu { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("menu_overlay");
 
     public bool IsOptionsEnable { get; set; }
 
@@ -25,15 +27,16 @@ public class MenuScreen : IScreen
 
     public void Initialize()
     {
-        LoadBotoes();
+        LoadButtons();
+        LoadOptionButtons();
     }
 
-    public void LoadBotoes()
+    public void LoadButtons()
     {
         var telaWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
         var telaHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
 
-        var width = 400;
+        var width = 300;
         var height = 100;
         var x = telaWidth / 2 - width / 2;
         var y = (int)(telaHeight / 1.6 - height / 2);
@@ -70,15 +73,43 @@ public class MenuScreen : IScreen
         ListaBotoes.Add(botaoExit);
     }
 
+    public void LoadOptionButtons()
+    {
+        var totalWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
+        var totalHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+
+        var widthMenu = totalWidth / 2.9f;
+        var heightMenu = totalHeight / 1.2f;
+        var xMenu = totalWidth / 2 - widthMenu / 2;
+        var yMenu = totalHeight / 2 - heightMenu / 2;
+
+        var widthCloseButton = widthMenu / 10f;
+        var xCloseButton = xMenu + widthMenu - widthCloseButton;
+        var yCloseButton = yMenu;
+
+        var closeButton = new BaseElementModel()
+        {
+            Rectangle = new((int)xCloseButton, (int)yCloseButton, (int)widthCloseButton, (int)widthCloseButton),
+            Click = () => ToggleOptions(),
+            Text = "X",
+            Overlay = OverlaySquareButton,
+            Color = Color.White,
+        };
+
+        ListaBotoesOptions.Add(closeButton);
+    }
+
     #endregion
 
     #region Update
 
     public void Update(GameTime gameTime)
     {
-        ListaBotoes.ForEach(x => x.Update(gameTime));
-
-        if (IsOptionsEnable)
+        if (!IsOptionsEnable)
+        {
+            ListaBotoes.ForEach(x => x.Update(gameTime));
+        }
+        else
         {
             ListaBotoesOptions.ForEach(x => x.Update(gameTime));
         }
@@ -157,22 +188,25 @@ public class MenuScreen : IScreen
         var totalWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
         var totalHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
 
-        var width = totalWidth / 3f;
+        var width = totalWidth / 2.9f;
         var height = totalHeight / 1.2f;
 
         var x = totalWidth / 2 - width / 2;
         var y = totalHeight / 2 - height / 2;
 
+        var scaleX = width / OverlayMenu.Width;
+        var scaleY = height / OverlayMenu.Height;
+
         var titlePosition = new Vector2(x, y);
 
-        GlobalVariables.SpriteBatchEntities.Draw(
-            Title,
+        GlobalVariables.SpriteBatchInterface.Draw(
+            OverlayMenu,
             titlePosition,
             null,
             Color.White,
             0f,
             new Vector2(0.5f, 0.5f),
-            new Vector2(1, 1),
+            new Vector2(scaleX, scaleY),
             SpriteEffects.None,
             0f);
     }
