@@ -17,42 +17,24 @@ public class BaseElementModel
     public bool IsHover { get; set; } = false;
     public Color HoverColor => Color * 0.7f;
 
-    public Action Click { get; set; }
-    private SoundEffect ClickSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("button_click");
-
     public const float Delay = 0.3f;
     public float DelayAtual { get; set; }
 
     public Texture2D Overlay { get; set; } = null;
 
-    public void Update(GameTime gameTime)
+    protected SoundEffect ClickSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("button_click");
+
+    public virtual void Update(GameTime gameTime)
     {
         var mouse = Mouse.GetState();
         var mousePos = new Point(mouse.X, mouse.Y);
 
         DelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        var hovering = Rectangle.Contains(mousePos);
-        if (hovering)
-        {
-            IsHover = true;
-
-            if (mouse.LeftButton == ButtonState.Pressed && 
-                DelayAtual < 0 &&
-                !GlobalVariables.IsMouseDown)
-            {
-                Click?.Invoke();
-                ClickSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
-                DelayAtual = Delay;
-            }
-        }
-        else
-        {
-            IsHover = false;
-        }
+        IsHover = Rectangle.Contains(mousePos);
     }
 
-    public void Draw()
+    public virtual void Draw()
     {
         if (Overlay != null)
         {
@@ -69,7 +51,7 @@ public class BaseElementModel
         }
     }
 
-    public void DrawText()
+    protected void DrawText()
     {
         var textSize = GlobalVariables.Font.MeasureString(Text);
         var textPosition = new Vector2(
@@ -78,12 +60,12 @@ public class BaseElementModel
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, Text, textPosition, Color.White);
     }
 
-    public void DrawRectangle()
+    protected void DrawRectangle()
     {
         GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, Rectangle, IsHover ? HoverColor : Color);
     }
 
-    public void DrawOverlay()
+    protected void DrawOverlay()
     {
         var scaleX = (float)Rectangle.Width / (float)Overlay.Width;
         var scaleY = (float)Rectangle.Height / (float)Overlay.Height;

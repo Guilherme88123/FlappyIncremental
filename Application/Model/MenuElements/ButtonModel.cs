@@ -1,0 +1,31 @@
+﻿using Application.Dto;
+using Application.Model.MenuElements.Base;
+using FlappyIncremental.Dto;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Input;
+using System;
+
+namespace Application.Model.MenuElements;
+
+public class ButtonModel : BaseElementModel
+{
+    public Action Click { get; set; }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        var mouse = Mouse.GetState();
+
+        if (mouse.LeftButton == ButtonState.Pressed &&
+            DelayAtual < 0 &&
+            !GlobalVariables.IsMouseDown &&
+            IsHover)
+        {
+            Click?.Invoke();
+            ClickSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
+            DelayAtual = Delay;
+        }
+    }
+}

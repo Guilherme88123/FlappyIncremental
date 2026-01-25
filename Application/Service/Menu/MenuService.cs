@@ -1,16 +1,15 @@
-﻿using Application.Interface.Menu;
-using Application.Model.MenuElements.Base;
-using Application.Model.MenuElements.Button;
+﻿using System.Collections.Generic;
+using Application.Interface.Menu;
+using Application.Model.MenuElements;
+using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using FlappyIncremental.Dto;
-using System.Collections.Generic;
 
 namespace Application.Service.Menu;
 
 public class MenuService : IMenuService
 {
-    private List<BaseElementModel> MenuElements = new();
+    private List<ButtonModel> MenuElements = new();
     private Rectangle Rectangle = new();
 
     private float Delay = 0.3f;

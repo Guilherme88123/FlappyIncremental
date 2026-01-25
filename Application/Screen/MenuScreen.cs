@@ -1,5 +1,6 @@
 ﻿using Application.Const;
 using Application.Interface.Screen;
+using Application.Model.MenuElements;
 using Application.Model.MenuElements.Base;
 using FlappyIncremental.Const;
 using FlappyIncremental.Dto;
@@ -42,7 +43,7 @@ public class MenuScreen : IScreen
         var x = telaWidth / 2 - width / 2;
         var y = (int)(telaHeight / 1.6 - height / 2);
 
-        var botaoStart = new BaseElementModel()
+        var botaoStart = new ButtonModel()
         {
             Rectangle = new(x, y, width, height),
             Click = () => StartGame(),
@@ -51,7 +52,7 @@ public class MenuScreen : IScreen
             Color = Color.White,
         };
 
-        var botaoOpcoes = new BaseElementModel()
+        var botaoOpcoes = new ButtonModel()
         {
             Rectangle = new(x, y + (height + 10), width, height),
             Click = () => ToggleOptions(),
@@ -60,7 +61,7 @@ public class MenuScreen : IScreen
             Color = Color.White,
         };
 
-        var botaoExit = new BaseElementModel()
+        var botaoExit = new ButtonModel()
         {
             Rectangle = new(x, y + (height + 10) * 2, width, height),
             Click = () => GlobalVariables.Game.Exit(),
@@ -90,7 +91,7 @@ public class MenuScreen : IScreen
         var xCloseButton = xMenu + widthMenu - widthCloseButton;
         var yCloseButton = yMenu;
 
-        var closeButton = new BaseElementModel()
+        var closeButton = new ButtonModel()
         {
             Rectangle = new((int)xCloseButton, (int)yCloseButton, (int)widthCloseButton, (int)widthCloseButton),
             Click = () => ToggleOptions(),

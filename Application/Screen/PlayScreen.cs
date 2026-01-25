@@ -4,6 +4,7 @@ using Application.Enum;
 using Application.Interface.Menu;
 using Application.Interface.Screen;
 using Application.Model.Entities;
+using Application.Model.MenuElements;
 using Application.Model.MenuElements.Base;
 using FlappyIncremental.Dto;
 using FlappyIncremental.Model.Entities.Base;
@@ -80,7 +81,7 @@ public class PlayScreen : IScreen
         var y = yMenu + heightMenu - borderMenu - heigth;
         var spacing = 5;
 
-        var menuButton = new BaseElementModel()
+        var menuButton = new ButtonModel()
         {
             Rectangle = new((int)x, (int)y, (int)width, (int)heigth),
             Click = () => MainMenuButton(),
@@ -89,7 +90,7 @@ public class PlayScreen : IScreen
             Color = Color.White,
         };
 
-        var retryButton = new BaseElementModel()
+        var retryButton = new ButtonModel()
         {
             Rectangle = new((int)x, (int)y - heigth - spacing, (int)width, (int)heigth),
             Click = () => RetryButton(),
