@@ -1,4 +1,5 @@
 ﻿using Application.Const;
+using Application.Dto;
 using Application.Enum;
 using Application.Interface.Menu;
 using Application.Interface.Screen;
@@ -7,12 +8,12 @@ using Application.Model.MenuElements.Base;
 using FlappyIncremental.Dto;
 using FlappyIncremental.Model.Entities.Base;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Application.Screen;
 
@@ -40,6 +41,7 @@ public class PlayScreen : IScreen
 
     private List<BaseElementModel> ListGameOverButton { get; set; } = new();
     private Rectangle GameOverOverlayRect { get; set; }
+    private SoundEffect GameOverSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("game_over");
 
     public PlayScreen()
     {
@@ -314,6 +316,7 @@ public class PlayScreen : IScreen
 
     public void Exit()
     {
+        GameOverSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
         GameStatus = GameStatusType.GameOver;
     }
 

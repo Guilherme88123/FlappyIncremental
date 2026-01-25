@@ -1,6 +1,8 @@
-﻿using FlappyIncremental.Dto;
+﻿using Application.Dto;
+using FlappyIncremental.Dto;
 using FlappyIncremental.Model.Entities.Base;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -16,7 +18,9 @@ public class BirdModel : BaseEntityModel
 
     private const float MaxAngle = (float)(Math.PI / 6f);
     private const float RotationSpeed = 10f;
-    
+
+    private SoundEffect JumpSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("jump");
+
     public BirdModel((float x, float y) position) : base(position)
     {
         Sprite = GlobalVariables.Game.Content.Load<Texture2D>("bird");
@@ -75,6 +79,7 @@ public class BirdModel : BaseEntityModel
     private void Jump()
     {
         Speed = new(0, -MaxSpeed);
+        JumpSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
     }
 
     private void GetAngulo(GameTime gameTime)

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Application.Interface.Screen;
 using Application.Const;
 using Microsoft.Xna.Framework.Audio;
+using Application.Dto;
 
 namespace FlappyIncremental;
 
@@ -24,7 +25,6 @@ public class Flappy : Game
     public string InitialScreenCode = ScreenCodesConst.MenuScreen;
 
     private SoundEffect Music {  get; set; }
-    private float MusicVolume { get; set; } = 0.05f;
 
     public Flappy()
     {
@@ -57,7 +57,7 @@ public class Flappy : Game
         GlobalVariables.Pixel = pixel;
 
         Music = Content.Load<SoundEffect>("back_music");
-        Music.Play(MusicVolume, 0f, 0f);
+        Music.Play(GlobalOptions.MusicVolume, 0f, 0f);
     }
 
     protected override void Initialize()

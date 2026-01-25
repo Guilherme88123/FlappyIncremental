@@ -1,5 +1,7 @@
-﻿using FlappyIncremental.Dto;
+﻿using Application.Dto;
+using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -16,6 +18,7 @@ public class BaseElementModel
     public Color HoverColor => Color * 0.7f;
 
     public Action Click { get; set; }
+    private SoundEffect ClickSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("button_click");
 
     public const float Delay = 0.3f;
     public float DelayAtual { get; set; }
@@ -39,6 +42,7 @@ public class BaseElementModel
                 !GlobalVariables.IsMouseDown)
             {
                 Click?.Invoke();
+                ClickSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
                 DelayAtual = Delay;
             }
         }

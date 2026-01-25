@@ -43,6 +43,12 @@
 /processorParam:TextureFormat=Color
 /build:bird.png
 
+#begin button_click.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:button_click.wav
+
 #begin button_overlay.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -61,6 +67,18 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:DefaultFont.spritefont
+
+#begin game_over.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:game_over.wav
+
+#begin jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:jump.wav
 
 #begin menu_overlay.png
 /importer:TextureImporter
