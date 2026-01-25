@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin back_music.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:back_music.wav
+
 #begin background.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Interface.Screen;
 using Application.Const;
+using Microsoft.Xna.Framework.Audio;
 
 namespace FlappyIncremental;
 
@@ -22,13 +23,16 @@ public class Flappy : Game
 
     public string InitialScreenCode = ScreenCodesConst.MenuScreen;
 
+    private SoundEffect Music {  get; set; }
+    private float MusicVolume { get; set; } = 0.05f;
+
     public Flappy()
     {
         var graphics = new GraphicsDeviceManager(this);
         graphics.PreferredBackBufferWidth = 1920;
         graphics.PreferredBackBufferHeight = 1080;
         //graphics.IsFullScreen = true;
-        IsFixedTimeStep = true;
+        IsFixedTimeStep = true; 
         TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -51,6 +55,9 @@ public class Flappy : Game
         GlobalVariables.SpriteBatchEntities = spriteBatchEntities;
         GlobalVariables.SpriteBatchInterface = spriteBatchInterface;
         GlobalVariables.Pixel = pixel;
+
+        Music = Content.Load<SoundEffect>("back_music");
+        Music.Play(MusicVolume, 0f, 0f);
     }
 
     protected override void Initialize()
