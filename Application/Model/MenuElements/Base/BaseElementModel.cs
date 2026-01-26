@@ -45,19 +45,21 @@ public class BaseElementModel
             DrawRectangle();
         }
 
-        if (!string.IsNullOrEmpty(Text))
+        var text = GetText();
+
+        if (!string.IsNullOrEmpty(text))
         {
-            DrawText();
+            DrawText(text);
         }
     }
 
-    protected void DrawText()
+    protected void DrawText(string text)
     {
-        var textSize = GlobalVariables.Font.MeasureString(Text);
+        var textSize = GlobalVariables.Font.MeasureString(text);
         var textPosition = new Vector2(
             Rectangle.X + (Rectangle.Width - textSize.X) / 2,
             Rectangle.Y + (Rectangle.Height - textSize.Y) / 2);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, Text, textPosition, Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
     }
 
     protected void DrawRectangle()
@@ -82,5 +84,10 @@ public class BaseElementModel
             new Vector2(scaleX, scaleY),
             SpriteEffects.None,
             0f);
+    }
+
+    protected virtual string GetText()
+    {
+        return Text;
     }
 }

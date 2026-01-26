@@ -1,4 +1,5 @@
 ﻿using Application.Const;
+using Application.Dto;
 using Application.Interface.Screen;
 using Application.Model.MenuElements;
 using Application.Model.MenuElements.Base;
@@ -84,6 +85,7 @@ public class MenuScreen : IScreen
         var heightMenu = totalHeight / 1.2f;
         var xMenu = totalWidth / 2 - widthMenu / 2;
         var yMenu = totalHeight / 2 - heightMenu / 2;
+        var borderMenu = 50;
 
         OptionsMenuRect = new((int)xMenu, (int)yMenu, (int)widthMenu, (int)heightMenu);
 
@@ -94,13 +96,28 @@ public class MenuScreen : IScreen
         var closeButton = new ButtonModel()
         {
             Rectangle = new((int)xCloseButton, (int)yCloseButton, (int)widthCloseButton, (int)widthCloseButton),
-            Click = () => ToggleOptions(),
+            Click = ToggleOptions,
             Text = "X",
             Overlay = OverlaySquareButton,
             Color = Color.White,
         };
 
+        var widthButtons = widthMenu - borderMenu * 2;
+        var heightButtons = 100;
+        var xButtons = xMenu + borderMenu;
+        var yButtons = yMenu + borderMenu + 50;
+
+        var fullscreenButton = new SwitchModel()
+        {
+            Rectangle = new((int)xButtons, (int)yButtons, (int)widthButtons, (int)heightButtons),
+            Click = ToggleFullscreen,
+            Text = "Fullscreen",
+            Overlay = OverlayButton,
+            Color = Color.White,
+        };
+
         ListaBotoesOptions.Add(closeButton);
+        ListaBotoesOptions.Add(fullscreenButton);
     }
 
     #endregion
@@ -127,6 +144,13 @@ public class MenuScreen : IScreen
     public void ToggleOptions()
     {
         IsOptionsEnable = !IsOptionsEnable;
+    }
+
+    public void ToggleFullscreen(bool isFullscreen)
+    {
+        GlobalVariables.Graphics.IsFullScreen = isFullscreen;
+        GlobalVariables.Graphics.ApplyChanges();
+        GlobalOptions.Fullscreen = isFullscreen;
     }
 
     #endregion
