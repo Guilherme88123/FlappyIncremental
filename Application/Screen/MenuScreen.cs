@@ -106,6 +106,7 @@ public class MenuScreen : IScreen
         var heightButtons = 100;
         var xButtons = xMenu + borderMenu;
         var yButtons = yMenu + borderMenu + 50;
+        var spaceBetweenButtons = 10;
 
         var fullscreenButton = new SwitchModel()
         {
@@ -116,8 +117,28 @@ public class MenuScreen : IScreen
             Color = Color.White,
         };
 
+        var musicButton = new RadioModel()
+        {
+            Rectangle = new((int)xButtons, (int)yButtons + heightButtons + spaceBetweenButtons, (int)widthButtons, (int)heightButtons),
+            Text = "Music Volume",
+            Overlay = OverlayButton,
+            DotOverlay = OverlaySquareButton,
+            Color = Color.White,
+        };
+
+        var sfxButton = new RadioModel()
+        {
+            Rectangle = new((int)xButtons, (int)yButtons + (heightButtons + spaceBetweenButtons) * 2, (int)widthButtons, (int)heightButtons),
+            Text = "Effects Volume",
+            Overlay = OverlayButton,
+            DotOverlay = OverlaySquareButton,
+            Color = Color.White,
+        };
+
         ListaBotoesOptions.Add(closeButton);
         ListaBotoesOptions.Add(fullscreenButton);
+        ListaBotoesOptions.Add(musicButton);
+        ListaBotoesOptions.Add(sfxButton);
     }
 
     #endregion
