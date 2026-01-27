@@ -1,20 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Application.Const;
+using Application.Dto;
+using Application.Interface.Screen;
+using FlappyIncremental.Dto;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using FlappyIncremental.Dto;
-using Application.Enum;
-using Application.Interface.Menu;
-using System.Collections.Generic;
-using FlappyIncremental.Model.Entities.Base;
-using Application.Model.Entities;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.Interface.Screen;
-using Application.Const;
-using Microsoft.Xna.Framework.Audio;
-using Application.Dto;
 using Microsoft.Xna.Framework.Media;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FlappyIncremental;
 
@@ -33,7 +27,7 @@ public class Flappy : Game
         graphics.PreferredBackBufferWidth = 1920;
         graphics.PreferredBackBufferHeight = 1080;
         graphics.HardwareModeSwitch = false;
-        //graphics.IsFullScreen = true;
+        graphics.IsFullScreen = true;
         IsFixedTimeStep = true; 
         TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d);
         Content.RootDirectory = "Content";

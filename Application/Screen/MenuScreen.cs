@@ -142,10 +142,19 @@ public class MenuScreen : IScreen
             Value = GlobalOptions.SfxVolume,
         };
 
+        var sizeButton = new DropdownModel()
+        {
+            Rectangle = new((int)xButtons, (int)yButtons + (heightButtons + spaceBetweenButtons) * 3, (int)widthButtons, (int)heightButtons),
+            Text = "Window Size",
+            Overlay = OverlayButton,
+            Color = Color.White,
+        };
+
         ListaBotoesOptions.Add(closeButton);
         ListaBotoesOptions.Add(fullscreenButton);
         ListaBotoesOptions.Add(musicButton);
         ListaBotoesOptions.Add(sfxButton);
+        ListaBotoesOptions.Add(sizeButton);
     }
 
     #endregion
