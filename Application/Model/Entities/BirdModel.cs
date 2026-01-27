@@ -79,7 +79,7 @@ public class BirdModel : BaseEntityModel
     private void Jump()
     {
         Speed = new(0, -MaxSpeed);
-        JumpSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
+        JumpSound.Play(GlobalOptions.SfxVolumeFloat, 0f, 0f);
     }
 
     private void GetAngulo(GameTime gameTime)

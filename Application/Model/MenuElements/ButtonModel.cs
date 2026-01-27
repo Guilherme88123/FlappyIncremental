@@ -23,7 +23,7 @@ public class ButtonModel : BaseElementModel
             !GlobalVariables.IsMouseDown &&
             IsHover)
         {
-            ClickSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
+            ClickSound.Play(GlobalOptions.SfxVolumeFloat, 0f, 0f);
             Click?.Invoke();
             DelayAtual = Delay;
         }

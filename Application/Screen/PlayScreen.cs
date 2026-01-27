@@ -317,7 +317,7 @@ public class PlayScreen : IScreen
 
     public void Exit()
     {
-        GameOverSound.Play(GlobalOptions.SfxVolume, 0f, 0f);
+        GameOverSound.Play(GlobalOptions.SfxVolumeFloat, 0f, 0f);
         GameStatus = GameStatusType.GameOver;
     }
 

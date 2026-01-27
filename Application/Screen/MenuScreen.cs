@@ -7,6 +7,8 @@ using FlappyIncremental.Const;
 using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
+using System;
 using System.Collections.Generic;
 using static System.Formats.Asn1.AsnWriter;
 
@@ -115,6 +117,7 @@ public class MenuScreen : IScreen
             Text = "Fullscreen",
             Overlay = OverlayButton,
             Color = Color.White,
+            Value = GlobalOptions.Fullscreen,
         };
 
         var musicButton = new RadioModel()
@@ -124,6 +127,8 @@ public class MenuScreen : IScreen
             Overlay = OverlayButton,
             DotOverlay = OverlaySquareButton,
             Color = Color.White,
+            ValueUpdate = UpdateMusicVolume,
+            Value = GlobalOptions.MusicVolume,
         };
 
         var sfxButton = new RadioModel()
@@ -133,6 +138,8 @@ public class MenuScreen : IScreen
             Overlay = OverlayButton,
             DotOverlay = OverlaySquareButton,
             Color = Color.White,
+            ValueUpdate = UpdateSfxVolume,
+            Value = GlobalOptions.SfxVolume,
         };
 
         ListaBotoesOptions.Add(closeButton);
@@ -172,6 +179,22 @@ public class MenuScreen : IScreen
         GlobalVariables.Graphics.IsFullScreen = isFullscreen;
         GlobalVariables.Graphics.ApplyChanges();
         GlobalOptions.Fullscreen = isFullscreen;
+    }
+
+    public void UpdateMusicVolume(int volume)
+    {
+        GlobalOptions.MusicVolume = volume;
+        MediaPlayer.Volume = GlobalOptions.MusicVolumeFloat;
+    }
+
+    public void UpdateSfxVolume(int volume)
+    { 
+        GlobalOptions.SfxVolume = volume;
+    }
+
+    private static float SliderToVolume(int slider)
+    {
+        return Math.Clamp(slider / 100f, 0f, 0.5f);
     }
 
     #endregion

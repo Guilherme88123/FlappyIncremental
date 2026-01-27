@@ -15,7 +15,7 @@
 
 #begin back_music.wav
 /importer:WavImporter
-/processor:SoundEffectProcessor
+/processor:SongProcessor
 /processorParam:Quality=Best
 /build:back_music.wav
 
