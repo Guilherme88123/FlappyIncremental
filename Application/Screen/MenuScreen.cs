@@ -148,6 +148,12 @@ public class MenuScreen : IScreen
             Text = "Window Size",
             Overlay = OverlayButton,
             Color = Color.White,
+            ListItens = new List<DropdownItemDto>()
+            {
+                new() { Id = 0, Text = "800x600" },
+                new() { Id = 1, Text = "1280x720" },
+                new() { Id = 2, Text = "1920x1080" },
+            },
         };
 
         ListaBotoesOptions.Add(closeButton);
