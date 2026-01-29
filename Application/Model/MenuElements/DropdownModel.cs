@@ -3,6 +3,7 @@ using Application.Model.MenuElements.Base;
 using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Net.Mime.MediaTypeNames;
@@ -15,6 +16,7 @@ public class DropdownModel : BaseElementModel
 
     public List<DropdownItemDto> ListItens { get; set; }
     public int SelectedItem { get; set; }
+    public Action<DropdownItemDto> ValueUpdate { get; set; }
 
     public override void Update(GameTime gameTime)
     {
@@ -31,6 +33,30 @@ public class DropdownModel : BaseElementModel
             ToggleOpen();
             DelayAtual = Delay;
         }
+
+        UpdateOptions();
+    }
+
+    private void UpdateOptions()
+    {
+        var mouse = Mouse.GetState();
+        var mousePos = new Point(mouse.X, mouse.Y);
+
+        foreach (var item in ListItens)
+        {
+            item.IsHover = item.Rectangle.Contains(mousePos);
+
+            if (mouse.LeftButton == ButtonState.Pressed &&
+                DelayAtual < 0 &&
+                !GlobalVariables.IsMouseDown &&
+                item.IsHover)
+            {
+                ClickSound.Play(GlobalOptions.SfxVolumeFloat, 0f, 0f);
+                ToggleOpen();
+                SelectItem(item.Id);
+                DelayAtual = Delay;
+            }
+        }
     }
 
     private void ToggleOpen()
@@ -38,6 +64,17 @@ public class DropdownModel : BaseElementModel
         IsOpen = !IsOpen;
 
         if (IsOpen) UpdateOptionsRectangle();
+    }
+
+    private void SelectItem(int id)
+    {
+        if (SelectedItem != id)
+        {
+            var item = ListItens.First(x => x.Id == id);
+            ValueUpdate?.Invoke(item);
+        }
+
+        SelectedItem = id;
     }
 
     private void UpdateOptionsRectangle()
@@ -81,8 +118,8 @@ public class DropdownModel : BaseElementModel
         {
             var textSize = GlobalVariables.Font.MeasureString(item.Text);
 
-            var x = Rectangle.X + Rectangle.Width / 2 - textSize.X / 2;
-            var y = Rectangle.Y + Rectangle.Height + (Rectangle.Height / 2) - (textSize.Y / 2) * item.Id;
+            var x = item.Rectangle.X + item.Rectangle.Width / 2 - textSize.X / 2;
+            var y = item.Rectangle.Y + item.Rectangle.Height / 2 - textSize.Y / 2;
 
             GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, item.Text, new(x, y), Color.White);
         }
@@ -90,17 +127,11 @@ public class DropdownModel : BaseElementModel
 
     private void DrawDropdownOverlay()
     {
-        var border = 30;
-
-        var height = (Rectangle.Height / 2) * (ListItens.Count + 1);
-
-        var Rec = new Rectangle(
-            Rectangle.X + border, 
-            Rectangle.Y + Rectangle.Height - border, 
-            Rectangle.Width - border * 2,
-            height);
-
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, Rec, Color.DarkGray);
+        foreach (var item in ListItens)
+        {
+            var color = item.IsHover ? Color.DarkGray * 0.7f : Color.DarkGray;
+            GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, item.Rectangle, color);
+        }
     }
 }
 
@@ -109,4 +140,6 @@ public class DropdownItemDto
     public int Id { get; set; }
     public string Text { get; set; }
     public Rectangle Rectangle { get; set; }
+    public bool IsHover { get; set; }
+    public object Value { get; set; }
 }

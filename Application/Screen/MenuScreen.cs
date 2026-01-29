@@ -148,11 +148,12 @@ public class MenuScreen : IScreen
             Text = "Window Size",
             Overlay = OverlayButton,
             Color = Color.White,
+            ValueUpdate = UpdateWindowSize,
             ListItens = new List<DropdownItemDto>()
             {
-                new() { Id = 0, Text = "800x600" },
-                new() { Id = 1, Text = "1280x720" },
-                new() { Id = 2, Text = "1920x1080" },
+                new() { Id = 0, Text = "800x600", Value = new Vector2(800, 600) },
+                new() { Id = 1, Text = "1280x720", Value = new Vector2(1280, 720) },
+                new() { Id = 2, Text = "1920x1080", Value = new Vector2(1920, 1080) },
             },
         };
 
@@ -189,6 +190,22 @@ public class MenuScreen : IScreen
         IsOptionsEnable = !IsOptionsEnable;
     }
 
+    public void UpdateWindowSize(DropdownItemDto item)
+    {
+        var size = item.Value as Vector2?;
+
+        if (size is null) return;
+
+        var width = (int)size.Value.X;
+        var height = (int)size.Value.Y;
+
+        GlobalVariables.Graphics.PreferredBackBufferWidth = width;
+        GlobalVariables.Graphics.PreferredBackBufferHeight = height;
+        GlobalVariables.Graphics.ApplyChanges();
+        GlobalOptions.WidthSize = width;
+        GlobalOptions.HeightSize = height;
+    }
+
     public void ToggleFullscreen(bool isFullscreen)
     {
         GlobalVariables.Graphics.IsFullScreen = isFullscreen;
@@ -206,12 +223,7 @@ public class MenuScreen : IScreen
     { 
         GlobalOptions.SfxVolume = volume;
     }
-
-    private static float SliderToVolume(int slider)
-    {
-        return Math.Clamp(slider / 100f, 0f, 0.5f);
-    }
-
+    
     #endregion
 
     #region Draw

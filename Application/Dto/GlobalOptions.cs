@@ -7,8 +7,9 @@ public static class GlobalOptions
 {
     public static int MusicVolume { get; set; } = 50;
     public static int SfxVolume { get; set; } = 50;
-    public static bool Fullscreen { get; set; } = true;
-    public static Vector2 SizeScreen { get; set; } = new Vector2(1920, 1080);
+    public static bool Fullscreen { get; set; } = false;
+    public static int WidthSize { get; set; } = 1920;
+    public static int HeightSize { get; set; } = 1080;
 
     public static float MusicVolumeFloat => VolumeToFloat(MusicVolume);
     public static float SfxVolumeFloat => VolumeToFloat(SfxVolume);

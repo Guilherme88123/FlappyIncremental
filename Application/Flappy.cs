@@ -24,10 +24,10 @@ public class Flappy : Game
     public Flappy()
     {
         var graphics = new GraphicsDeviceManager(this);
-        graphics.PreferredBackBufferWidth = 1920;
-        graphics.PreferredBackBufferHeight = 1080;
+        graphics.PreferredBackBufferWidth = GlobalOptions.WidthSize;
+        graphics.PreferredBackBufferHeight = GlobalOptions.HeightSize;
         graphics.HardwareModeSwitch = false;
-        graphics.IsFullScreen = true;
+        graphics.IsFullScreen = GlobalOptions.Fullscreen;
         IsFixedTimeStep = true; 
         TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d);
         Content.RootDirectory = "Content";
