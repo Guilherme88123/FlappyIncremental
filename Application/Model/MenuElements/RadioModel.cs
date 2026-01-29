@@ -66,6 +66,14 @@ public class RadioModel : BaseElementModel
         }
     }
 
+    private void UpdateLineRectangle()
+    {
+        var border = Rectangle.Width / 8;
+        var lineHeight = Rectangle.Height / 8;
+        var lineY = Rectangle.Y + Rectangle.Height - lineHeight * 3;
+        LineRectangle = new Rectangle(Rectangle.X + border, lineY, Rectangle.Width - border * 2, lineHeight);
+    }
+
     private void UpdateDotRectangle()
     {
         int dotSize = Rectangle.Height / 4;
@@ -75,16 +83,9 @@ public class RadioModel : BaseElementModel
         int right = LineRectangle.Right - dotSize;
 
         int dotX = (int)MathHelper.Lerp(left, right, percent);
-        int dotY = Rectangle.Y + Rectangle.Height - dotSize - 20;
+        int dotY = LineRectangle.Y + LineRectangle.Height / 2 - dotSize / 2;
 
         DotRectangle = new Rectangle(dotX, dotY, dotSize, dotSize);
-    }
-
-    private void UpdateLineRectangle()
-    {
-        var lineHeight = Rectangle.Height / 8;
-        var lineY = Rectangle.Y + Rectangle.Height - lineHeight - 30;
-        LineRectangle = new Rectangle(Rectangle.X + 40, lineY, Rectangle.Width - 80, lineHeight);
     }
 
     public override void Draw()

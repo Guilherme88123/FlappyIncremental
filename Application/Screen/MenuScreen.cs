@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Application.Screen;
@@ -27,6 +28,7 @@ public class MenuScreen : IScreen
     private Rectangle OptionsMenuRect { get; set; }
 
     public bool IsOptionsEnable { get; set; }
+    public bool HasUpdateSize { get; set; }
 
     #region Initialize
 
@@ -38,13 +40,15 @@ public class MenuScreen : IScreen
 
     public void LoadButtons()
     {
-        var telaWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
-        var telaHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+        ListaBotoes.Clear();
 
-        var width = 300;
-        var height = 100;
-        var x = telaWidth / 2 - width / 2;
-        var y = (int)(telaHeight / 1.6 - height / 2);
+        var windowWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
+        var windowHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+
+        var width = windowWidth / 5;
+        var height = windowHeight / 9;
+        var x = windowWidth / 2 - width / 2;
+        var y = (int)(windowHeight / 2 - height / 2);
 
         var botaoStart = new ButtonModel()
         {
@@ -80,13 +84,15 @@ public class MenuScreen : IScreen
 
     public void LoadOptionButtons()
     {
-        var totalWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
-        var totalHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+        ListaBotoesOptions.Clear();
 
-        var widthMenu = totalWidth / 2.9f;
-        var heightMenu = totalHeight / 1.2f;
-        var xMenu = totalWidth / 2 - widthMenu / 2;
-        var yMenu = totalHeight / 2 - heightMenu / 2;
+        var windowWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
+        var windowHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+
+        var widthMenu = windowWidth / 2.5f;
+        var heightMenu = windowHeight / 1.2f;
+        var xMenu = windowWidth / 2 - widthMenu / 2;
+        var yMenu = windowHeight / 2 - heightMenu / 2;
         var borderMenu = 50;
 
         OptionsMenuRect = new((int)xMenu, (int)yMenu, (int)widthMenu, (int)heightMenu);
@@ -105,14 +111,34 @@ public class MenuScreen : IScreen
         };
 
         var widthButtons = widthMenu - borderMenu * 2;
-        var heightButtons = 100;
+        var heightButtons = windowHeight / 9;
         var xButtons = xMenu + borderMenu;
-        var yButtons = yMenu + borderMenu + 50;
-        var spaceBetweenButtons = 10;
+        var yButtons = yMenu + borderMenu;
+        var spaceBetweenButtons = heightButtons / 10;
+
+        var sizeButton = new DropdownModel()
+        {
+            Rectangle = new((int)xButtons, (int)yButtons + (heightButtons + spaceBetweenButtons) * 3, (int)widthButtons, (int)heightButtons),
+            Text = "Window Size",
+            Overlay = OverlayButton,
+            Color = Color.White,
+            ValueUpdate = UpdateWindowSize,
+            ListItens = new List<DropdownItemDto>()
+            {
+                new() { Id = 0, Text = "800x600", Value = new Vector2(800, 600) },
+                new() { Id = 1, Text = "1280x720", Value = new Vector2(1280, 720) },
+                new() { Id = 2, Text = "1600x900", Value = new Vector2(1600, 900) },
+                new() { Id = 3, Text = "1920x1080", Value = new Vector2(1920, 1080) },
+            },
+        };
+
+        sizeButton.SelectedItem = sizeButton.ListItens.First(x =>
+            ((Vector2)x.Value).X == GlobalOptions.WidthSize &&
+            ((Vector2)x.Value).Y == GlobalOptions.HeightSize).Id;
 
         var fullscreenButton = new SwitchModel()
         {
-            Rectangle = new((int)xButtons, (int)yButtons, (int)widthButtons, (int)heightButtons),
+            Rectangle = new((int)xButtons, (int)yButtons + (heightButtons + spaceBetweenButtons) * 0, (int)widthButtons, (int)heightButtons),
             Click = ToggleFullscreen,
             Text = "Fullscreen",
             Overlay = OverlayButton,
@@ -122,7 +148,7 @@ public class MenuScreen : IScreen
 
         var musicButton = new RadioModel()
         {
-            Rectangle = new((int)xButtons, (int)yButtons + heightButtons + spaceBetweenButtons, (int)widthButtons, (int)heightButtons),
+            Rectangle = new((int)xButtons, (int)yButtons + (heightButtons + spaceBetweenButtons) * 1, (int)widthButtons, (int)heightButtons),
             Text = "Music Volume",
             Overlay = OverlayButton,
             DotOverlay = OverlaySquareButton,
@@ -142,26 +168,11 @@ public class MenuScreen : IScreen
             Value = GlobalOptions.SfxVolume,
         };
 
-        var sizeButton = new DropdownModel()
-        {
-            Rectangle = new((int)xButtons, (int)yButtons + (heightButtons + spaceBetweenButtons) * 3, (int)widthButtons, (int)heightButtons),
-            Text = "Window Size",
-            Overlay = OverlayButton,
-            Color = Color.White,
-            ValueUpdate = UpdateWindowSize,
-            ListItens = new List<DropdownItemDto>()
-            {
-                new() { Id = 0, Text = "800x600", Value = new Vector2(800, 600) },
-                new() { Id = 1, Text = "1280x720", Value = new Vector2(1280, 720) },
-                new() { Id = 2, Text = "1920x1080", Value = new Vector2(1920, 1080) },
-            },
-        };
-
         ListaBotoesOptions.Add(closeButton);
+        ListaBotoesOptions.Add(sizeButton);
         ListaBotoesOptions.Add(fullscreenButton);
         ListaBotoesOptions.Add(musicButton);
         ListaBotoesOptions.Add(sfxButton);
-        ListaBotoesOptions.Add(sizeButton);
     }
 
     #endregion
@@ -177,6 +188,13 @@ public class MenuScreen : IScreen
         else
         {
             ListaBotoesOptions.ForEach(x => x.Update(gameTime));
+        }
+
+        if (HasUpdateSize)
+        {
+            LoadButtons();
+            LoadOptionButtons();
+            HasUpdateSize = false;
         }
     }
 
@@ -204,6 +222,8 @@ public class MenuScreen : IScreen
         GlobalVariables.Graphics.ApplyChanges();
         GlobalOptions.WidthSize = width;
         GlobalOptions.HeightSize = height;
+
+        HasUpdateSize = true;
     }
 
     public void ToggleFullscreen(bool isFullscreen)
@@ -256,11 +276,17 @@ public class MenuScreen : IScreen
 
     public void DrawTitle()
     {
-        var width = GlobalVariables.Graphics.PreferredBackBufferWidth;
-        var height = GlobalVariables.Graphics.PreferredBackBufferHeight;
+        var windowWidth = GlobalOptions.WidthSize;
+        var windowHeight = GlobalOptions.HeightSize;
 
-        var x = width / 2 - Title.Width / 2;
-        var y = 250;
+        var width = windowWidth / 3;
+        var height = windowHeight / 4;
+
+        var x = windowWidth / 2 - width / 2;
+        var y = windowHeight / 8;
+
+        var scaleX = (float)width / Title.Width;
+        var scaleY = (float)height / Title.Height;
 
         var titlePosition = new Vector2(x, y);
 
@@ -271,7 +297,7 @@ public class MenuScreen : IScreen
             Color.White,
             0f,
             new Vector2(0.5f, 0.5f),
-            new Vector2(1, 1),
+            new Vector2(scaleX, scaleY),
             SpriteEffects.None,
             0f);
     }
