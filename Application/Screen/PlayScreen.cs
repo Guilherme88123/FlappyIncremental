@@ -59,7 +59,10 @@ public class PlayScreen : IScreen
 
     public void LoadInitialEntities()
     {
-        Entities.Add(new BirdModel((300, 500)));
+        var initialX = GlobalOptions.WidthSize / 7;
+        var initialY = (int)(GlobalOptions.HeightSize / 2.5);
+
+        Entities.Add(new BirdModel((initialX, initialY)));
     }
 
     public void LoadGameOverButtons()
@@ -179,14 +182,14 @@ public class PlayScreen : IScreen
 
     private void GerarPipe()
     {
-        PipeModel pipeCima = new PipeModel((1920, 0));
-        PipeModel pipeBaixo = new PipeModel((1920, 0));
+        PipeModel pipeCima = new PipeModel((GlobalOptions.WidthSize, 0));
+        PipeModel pipeBaixo = new PipeModel((GlobalOptions.WidthSize, 0));
 
         pipeBaixo.HasScored = true; //Controlar pontuação apenas pelo pipe de cima
         pipeCima.IsTop = true;
 
-        int espacoPassagem = 400;
-        int rng = new Random().Next(100, 700);
+        int espacoPassagem = GlobalOptions.HeightSize / 3;
+        int rng = new Random().Next(espacoPassagem / 2, espacoPassagem * 2);
 
         pipeCima.Position = new Vector2(pipeCima.Position.X, rng - pipeCima.Size.Y);
         pipeBaixo.Position = new Vector2(pipeBaixo.Position.X, rng + espacoPassagem);
