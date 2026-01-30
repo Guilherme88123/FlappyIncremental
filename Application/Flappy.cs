@@ -87,7 +87,7 @@ public class Flappy : Game
         GlobalVariables.Graphics.GraphicsDevice.Clear(color);
 
         GlobalVariables.SpriteBatchBackground.Begin();
-        GlobalVariables.SpriteBatchEntities.Begin();
+        GlobalVariables.SpriteBatchEntities.Begin(transformMatrix: GetScreenScaleMatrix());
         GlobalVariables.SpriteBatchInterface.Begin();
 
         ActualScreen.Draw();
@@ -97,6 +97,14 @@ public class Flappy : Game
         GlobalVariables.SpriteBatchInterface.End();
 
         base.Draw(gameTime);
+    }
+
+    private Matrix GetScreenScaleMatrix()
+    {
+        float scaleX = (float)GraphicsDevice.Viewport.Width / 1920f;
+        float scaleY = (float)GraphicsDevice.Viewport.Height / 1080f;
+
+        return Matrix.CreateScale(scaleX, scaleY, 1f);
     }
 
     public void ChangeScreen(string screenCode)

@@ -290,7 +290,7 @@ public class MenuScreen : IScreen
 
         var titlePosition = new Vector2(x, y);
 
-        GlobalVariables.SpriteBatchEntities.Draw(
+        GlobalVariables.SpriteBatchInterface.Draw(
             Title,
             titlePosition,
             null,
