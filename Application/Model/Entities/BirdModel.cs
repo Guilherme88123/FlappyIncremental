@@ -36,7 +36,7 @@ public class BirdModel : BaseEntityModel
 
         GetAngulo(gameTime);
 
-        if (Rectangle.Bottom >= GlobalVariables.Graphics.PreferredBackBufferHeight ||
+        if (Rectangle.Bottom >= 1080 ||
             Rectangle.Top <= 0)
         {
             Destroy();

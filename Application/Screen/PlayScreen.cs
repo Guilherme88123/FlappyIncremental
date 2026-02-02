@@ -59,30 +59,30 @@ public class PlayScreen : IScreen
 
     public void LoadInitialEntities()
     {
-        var initialX = GlobalOptions.WidthSize / 7;
-        var initialY = (int)(GlobalOptions.HeightSize / 2.5);
+        var initialX = 1920 / 7;
+        var initialY = (int)(1080 / 2.5);
 
         Entities.Add(new BirdModel((initialX, initialY)));
     }
 
     public void LoadGameOverButtons()
     {
-        var totalWidth = GlobalVariables.Graphics.PreferredBackBufferWidth;
-        var totalHeight = GlobalVariables.Graphics.PreferredBackBufferHeight;
+        var totalWidth = GlobalOptions.WidthSize;
+        var totalHeight = GlobalOptions.HeightSize;
 
-        var widthMenu = totalWidth / 5f;
+        var widthMenu = totalWidth / 4f;
         var heightMenu = totalHeight / 2f;
         var xMenu = totalWidth / 2 - widthMenu / 2;
         var yMenu = totalHeight / 2 - heightMenu / 2;
-        var borderMenu = 30;
+        var borderMenu = widthMenu / 10;
 
         GameOverOverlayRect = new((int)xMenu, (int)yMenu, (int)widthMenu, (int)heightMenu);
 
         var width = widthMenu - 2 * borderMenu;
-        var heigth = 100;
+        var heigth = heightMenu / 5;
         var x = xMenu + borderMenu;
         var y = yMenu + heightMenu - borderMenu - heigth;
-        var spacing = 5;
+        var spacing = heigth / 10;
 
         var menuButton = new ButtonModel()
         {
@@ -95,7 +95,7 @@ public class PlayScreen : IScreen
 
         var retryButton = new ButtonModel()
         {
-            Rectangle = new((int)x, (int)y - heigth - spacing, (int)width, (int)heigth),
+            Rectangle = new((int)x, (int)(y - heigth - spacing), (int)width, (int)heigth),
             Click = () => RetryButton(),
             Text = "Retry",
             Overlay = OverlayButton,
@@ -182,17 +182,20 @@ public class PlayScreen : IScreen
 
     private void GerarPipe()
     {
-        PipeModel pipeCima = new PipeModel((GlobalOptions.WidthSize, 0));
-        PipeModel pipeBaixo = new PipeModel((GlobalOptions.WidthSize, 0));
+        PipeModel pipeCima = new PipeModel((1920, 0));
+        PipeModel pipeBaixo = new PipeModel((1920, 0));
 
         pipeBaixo.HasScored = true; //Controlar pontuação apenas pelo pipe de cima
         pipeCima.IsTop = true;
 
-        int espacoPassagem = GlobalOptions.HeightSize / 3;
+        int espacoPassagem = 1080 / 3;
         int rng = new Random().Next(espacoPassagem / 2, espacoPassagem * 2);
 
-        pipeCima.Position = new Vector2(pipeCima.Position.X, rng - pipeCima.Size.Y);
-        pipeBaixo.Position = new Vector2(pipeBaixo.Position.X, rng + espacoPassagem);
+        pipeCima.Position = new Vector2(1920, rng - pipeCima.Size.Y);
+        pipeBaixo.Position = new Vector2(1920, rng + espacoPassagem);
+
+        //pipeCima.Position = new Vector2(pipeCima.Position.X, rng - pipeCima.Size.Y);
+        //pipeBaixo.Position = new Vector2(pipeBaixo.Position.X, rng + espacoPassagem);
 
         Entities.Add(pipeCima);
         Entities.Add(pipeBaixo);
@@ -277,8 +280,8 @@ public class PlayScreen : IScreen
 
     public void DrawGameOverTitle()
     {
-        var width = GlobalVariables.Graphics.PreferredBackBufferWidth;
-        var height = GlobalVariables.Graphics.PreferredBackBufferHeight;
+        var width = GlobalOptions.WidthSize;
+        var height = GlobalOptions.HeightSize;
 
         var text = "Game Over";
         var finalScore = $"Final Score: {Score}";
@@ -286,8 +289,11 @@ public class PlayScreen : IScreen
         var textSize = GlobalVariables.Font.MeasureString(text);
         var finalScoreSize = GlobalVariables.Font.MeasureString(finalScore);
 
-        var textPosition = new Vector2((width - textSize.X) / 2, (height - textSize.Y) / 2 - 150);
-        var finalScorePosition = new Vector2((width - finalScoreSize.X) / 2, textPosition.Y + 50);
+        var yMenu = GameOverOverlayRect.Y;
+        var borderMenu = (GameOverOverlayRect.Width) / 10;
+
+        var textPosition = new Vector2((width - textSize.X) / 2, yMenu + borderMenu);
+        var finalScorePosition = new Vector2((width - finalScoreSize.X) / 2, yMenu + borderMenu * 2);
 
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, finalScore, finalScorePosition, Color.White);
