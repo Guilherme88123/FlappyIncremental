@@ -41,8 +41,10 @@ public class PlayScreen : IScreen
     private GameStatusType GameStatus = GameStatusType.Playing;
 
     private List<BaseElementModel> ListGameOverButton { get; set; } = new();
-    private Rectangle GameOverOverlayRect { get; set; }
+    private Rectangle OverlayRect { get; set; }
     private SoundEffect GameOverSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("game_over");
+
+    private List<BaseElementModel> ListPauseButton { get; set; } = new();
 
     public PlayScreen()
     {
@@ -55,6 +57,7 @@ public class PlayScreen : IScreen
     {
         LoadInitialEntities();
         LoadGameOverButtons();
+        LoadPauseButtons();
     }
 
     public void LoadInitialEntities()
@@ -76,7 +79,7 @@ public class PlayScreen : IScreen
         var yMenu = totalHeight / 2 - heightMenu / 2;
         var borderMenu = widthMenu / 10;
 
-        GameOverOverlayRect = new((int)xMenu, (int)yMenu, (int)widthMenu, (int)heightMenu);
+        OverlayRect = new((int)xMenu, (int)yMenu, (int)widthMenu, (int)heightMenu);
 
         var width = widthMenu - 2 * borderMenu;
         var heigth = heightMenu / 5;
@@ -106,20 +109,74 @@ public class PlayScreen : IScreen
         ListGameOverButton.Add(retryButton);
     }
 
+    public void LoadPauseButtons()
+    {
+        var totalWidth = GlobalOptions.WidthSize;
+        var totalHeight = GlobalOptions.HeightSize;
+
+        var widthMenu = totalWidth / 4f;
+        var heightMenu = totalHeight / 2f;
+        var xMenu = totalWidth / 2 - widthMenu / 2;
+        var yMenu = totalHeight / 2 - heightMenu / 2;
+        var borderMenu = widthMenu / 10;
+
+        var width = widthMenu - 2 * borderMenu;
+        var heigth = heightMenu / 5; 
+        var x = xMenu + borderMenu;
+        var y = yMenu + heightMenu - borderMenu - heigth;
+        var spacing = heigth / 10;
+
+        var menuButton = new ButtonModel()
+        {
+            Rectangle = new((int)x, (int)y, (int)width, (int)heigth),
+            Click = () => MainMenuButton(),
+            Text = "Main Menu",
+            Overlay = OverlayButton,
+            Color = Color.White,
+        };
+
+        var retryButton = new ButtonModel()
+        {
+            Rectangle = new((int)x, (int)(y - heigth - spacing), (int)width, (int)heigth),
+            Click = () => RetryButton(),
+            Text = "Restart",
+            Overlay = OverlayButton,
+            Color = Color.White,
+        };
+
+        var resumeButton = new ButtonModel()
+        {
+            Rectangle = new((int)x, (int)(y - (heigth + spacing) * 2), (int)width, (int)heigth),
+            Click = () => ResumeButton(),
+            Text = "Resume",
+            Overlay = OverlayButton,
+            Color = Color.White,
+        };
+
+        ListPauseButton.Add(menuButton);
+        ListPauseButton.Add(retryButton);
+        ListPauseButton.Add(resumeButton);
+    }
+
     #endregion
 
     #region Update
 
     public void Update(GameTime gameTime)
     {
-        if (GameStatus != GameStatusType.GameOver)
+        if (GameStatus == GameStatusType.Playing) 
         {
             UpdatePlaying(gameTime);
+            return;
         }
-        else
+
+        if (GameStatus == GameStatusType.Paused) 
         {
-            UpdateGameOver(gameTime);
+            UpdatePause(gameTime);
+            return;
         }
+
+        UpdateGameOver(gameTime);
     }
 
     public void UpdatePlaying(GameTime gameTime)
@@ -235,6 +292,23 @@ public class PlayScreen : IScreen
 
     #endregion
 
+    #region Pause
+
+    public void UpdatePause(GameTime gameTime)
+    {
+        ListPauseButton.ForEach(x => x.Update(gameTime));
+    }
+
+    public void ResumeButton()
+    {
+        if (GameStatus == GameStatusType.Paused)
+        {
+            GameStatus = GameStatusType.Playing;
+        }
+    }
+
+    #endregion
+
     #endregion
 
     #region Draw
@@ -266,14 +340,35 @@ public class PlayScreen : IScreen
 
     public void DrawPausedInterface()
     {
+        DrawOverlay();
+        DrawPausedTitle();
+        ListPauseButton.ForEach(x => x.Draw());
+    }
 
+    public void DrawOverlay()
+    {
+        var scaleX = (float)OverlayRect.Width / OverlayMenu.Width;
+        var scaleY = (float)OverlayRect.Height / OverlayMenu.Height;
+
+        var overlayPosition = new Vector2(OverlayRect.X, OverlayRect.Y);
+
+        GlobalVariables.SpriteBatchInterface.Draw(
+            OverlayMenu,
+            overlayPosition,
+            null,
+            Color.White,
+            0f,
+            new Vector2(0.5f, 0.5f),
+            new Vector2(scaleX, scaleY),
+            SpriteEffects.None,
+            0f);
     }
 
     #region Game Over
 
     public void DrawGameOver()
     {
-        DrawGameOverOverlay();
+        DrawOverlay();
         DrawGameOverTitle();
         ListGameOverButton.ForEach(x => x.Draw());
     }
@@ -289,8 +384,8 @@ public class PlayScreen : IScreen
         var textSize = GlobalVariables.Font.MeasureString(text);
         var finalScoreSize = GlobalVariables.Font.MeasureString(finalScore);
 
-        var yMenu = GameOverOverlayRect.Y;
-        var borderMenu = (GameOverOverlayRect.Width) / 10;
+        var yMenu = OverlayRect.Y;
+        var borderMenu = (OverlayRect.Width) / 10;
 
         var textPosition = new Vector2((width - textSize.X) / 2, yMenu + borderMenu);
         var finalScorePosition = new Vector2((width - finalScoreSize.X) / 2, yMenu + borderMenu * 2);
@@ -299,23 +394,25 @@ public class PlayScreen : IScreen
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, finalScore, finalScorePosition, Color.White);
     }
 
-    public void DrawGameOverOverlay()
+    #endregion
+
+    #region Paused
+
+    public void DrawPausedTitle()
     {
-        var scaleX = (float)GameOverOverlayRect.Width / OverlayMenu.Width;
-        var scaleY = (float)GameOverOverlayRect.Height / OverlayMenu.Height;
+        var width = GlobalOptions.WidthSize;
+        var height = GlobalOptions.HeightSize;
 
-        var overlayPosition = new Vector2(GameOverOverlayRect.X, GameOverOverlayRect.Y);
+        var text = $"Current Score: {Score}";
 
-        GlobalVariables.SpriteBatchInterface.Draw(
-            OverlayMenu,
-            overlayPosition,
-            null,
-            Color.White,
-            0f,
-            new Vector2(0.5f, 0.5f),
-            new Vector2(scaleX, scaleY),
-            SpriteEffects.None,
-            0f);
+        var textSize = GlobalVariables.Font.MeasureString(text);
+
+        var yMenu = OverlayRect.Y;
+        var borderMenu = (OverlayRect.Width) / 10;
+
+        var textPosition = new Vector2((width - textSize.X) / 2, yMenu + borderMenu);
+
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
     }
 
     #endregion
