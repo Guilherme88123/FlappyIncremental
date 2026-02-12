@@ -21,6 +21,9 @@ public class BirdModel : BaseEntityModel
 
     private SoundEffect JumpSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("jump");
 
+    public const decimal MaxHealth = 100;
+    public decimal Health { get; set; } = MaxHealth * 0.7m;
+
     public BirdModel((float x, float y) position) : base(position)
     {
         Sprite = GlobalVariables.Game.Content.Load<Texture2D>("bird");
@@ -89,5 +92,32 @@ public class BirdModel : BaseEntityModel
 
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         ActualAngle = MathHelper.Lerp(ActualAngle, targetAngle, RotationSpeed * dt);
+    }
+
+    public override void Draw()
+    {
+        base.Draw();
+        DrawHealthBar();
+    }
+
+    private void DrawHealthBar()
+    {
+        var totalWidth = 1920;
+        var totalHeight = 1080;
+
+        var x = 5;
+        var y = 50;
+        var spacing = 3;
+        var width = totalWidth / 5;
+        var height = totalHeight / 20;
+
+        var healthPercentage = (float)(Health / MaxHealth);
+        var healthBarWidth = (int)(width * healthPercentage);
+
+        Rectangle backgroundRect = new(x, y, width, height);
+        Rectangle healthRect = new(x + spacing, y + spacing, healthBarWidth - spacing * 2, height - spacing * 2);
+
+        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, backgroundRect, Color.DarkGray);
+        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, healthRect, Color.Red);
     }
 }
