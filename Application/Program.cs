@@ -13,9 +13,11 @@ services.AddSingleton<IMenuService, MenuService>();
 
 services.AddTransient<IScreen, PlayScreen>();
 services.AddTransient<IScreen, MenuScreen>();
+services.AddTransient<IScreen, UpgradeScreen>();
 
 services.AddTransient<PlayScreen>();
 services.AddTransient<MenuScreen>();
+services.AddTransient<UpgradeScreen>();
 
 #endregion
 

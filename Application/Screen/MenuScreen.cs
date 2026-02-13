@@ -200,7 +200,7 @@ public class MenuScreen : IScreen
 
     public static void StartGame()
     {
-        GlobalVariables.Game.ChangeScreen(ScreenCodesConst.PlayScreen);
+        GlobalVariables.Game.ChangeScreen(ScreenCodesConst.UpgradeScreen);
     }
 
     public void ToggleOptions()
