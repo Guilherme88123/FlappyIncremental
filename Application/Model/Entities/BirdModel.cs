@@ -12,6 +12,9 @@ namespace Application.Model.Entities;
 
 public class BirdModel : BaseEntityModel
 {
+    public const float DelayDano = 0.05f;
+    public float DelayDanoAtual { get; set; }
+
     public const float DelayPulo = 0.15f;
     public float DelayPuloAtual { get; set; }
     public bool HasPressedSpace { get; set; }
@@ -22,7 +25,7 @@ public class BirdModel : BaseEntityModel
     private SoundEffect JumpSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("jump");
 
     public const decimal MaxHealth = 100;
-    public decimal Health { get; set; } = MaxHealth * 0.7m;
+    public decimal Health { get; set; } = MaxHealth;
 
     public BirdModel((float x, float y) position) : base(position)
     {
@@ -37,19 +40,21 @@ public class BirdModel : BaseEntityModel
     {
         base.Update(gameTime, entities);
 
+        
+
         GetAngulo(gameTime);
 
         if (Rectangle.Bottom >= 1080 ||
             Rectangle.Top <= 0)
         {
             Destroy();
-            GlobalVariables.Game.ActualScreen.Exit();
         }
 
         float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var teclado = Keyboard.GetState();
 
         DelayPuloAtual -= delta;
+        DelayDanoAtual -= delta;
 
         if (teclado.IsKeyDown(Keys.Space))
         {
@@ -65,6 +70,17 @@ public class BirdModel : BaseEntityModel
             HasPressedSpace = false;
         }
 
+        if (DelayDanoAtual < 0)
+        {
+            Health -= 0.3m;
+            DelayDanoAtual = DelayDano;
+
+            if (Health <= 0)
+            {
+                Destroy();
+            }
+        }
+
         Move(new(0, 1), delta);
     }
 
@@ -75,7 +91,6 @@ public class BirdModel : BaseEntityModel
         if (model is PipeModel pipe)
         {
             Destroy();
-            GlobalVariables.Game.ActualScreen.Exit();
         }
     }
 
@@ -119,5 +134,11 @@ public class BirdModel : BaseEntityModel
 
         GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, backgroundRect, Color.DarkGray);
         GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, healthRect, Color.Red);
+    }
+
+    public override void Destroy()
+    {
+        base.Destroy();
+        GlobalVariables.Game.ActualScreen.Exit();
     }
 }
