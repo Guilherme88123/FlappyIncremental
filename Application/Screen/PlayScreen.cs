@@ -425,6 +425,7 @@ public class PlayScreen : IScreen
     {
         GameOverSound.Play(GlobalOptions.SfxVolumeFloat, 0f, 0f);
         GameStatus = GameStatusType.GameOver;
+        GlobalStatus.TotalScore += Score;
     }
 
     #endregion

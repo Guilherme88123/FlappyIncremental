@@ -111,8 +111,6 @@ public class Flappy : Game
     {
         if (Screens.ContainsKey(screenCode))
         {
-            if (ActualScreen is not null) ActualScreen.Exit();
-
             if (!Screens.TryGetValue(screenCode, out var screenType))
             {
                 throw new Exception($"Screen with code {screenCode} not found.");

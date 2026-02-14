@@ -1,4 +1,5 @@
 ﻿using Application.Const;
+using Application.Dto;
 using Application.Interface.Screen;
 using Application.Model.MenuElements;
 using Application.Model.MenuElements.Base;
@@ -7,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Application.Screen;
 
@@ -85,6 +87,12 @@ public class UpgradeScreen : IScreen
     public void Draw()
     {
         ListaBotoes.ForEach(x => x.Draw());
+        DrawScore();
+    }
+
+    public void DrawScore()
+    {
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, $"Score: {GlobalStatus.TotalScore}", new Vector2(20, 20), Color.White);
     }
 
     #endregion
