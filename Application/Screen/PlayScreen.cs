@@ -1,4 +1,7 @@
-﻿using Application.Const;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Application.Const;
 using Application.Dto;
 using Application.Enum;
 using Application.Interface.Menu;
@@ -12,9 +15,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Application.Screen;
 
@@ -30,7 +30,7 @@ public class PlayScreen : IScreen
 
     private readonly IMenuService MenuService;
 
-    private float EscDelay = 0.3f;
+    private float EscDelay = 0.2f;
     private float EscDelayAtual = 0f;
 
     private float PipeDelay = 3f;
@@ -126,7 +126,7 @@ public class PlayScreen : IScreen
         var y = yMenu + heightMenu - borderMenu - heigth;
         var spacing = heigth / 10;
 
-        var menuButton = new ButtonModel()
+        var upgradeButton = new ButtonModel()
         {
             Rectangle = new((int)x, (int)y, (int)width, (int)heigth),
             Click = () => UpgradeButton(),
@@ -153,7 +153,7 @@ public class PlayScreen : IScreen
             Color = Color.White,
         };
 
-        ListPauseButton.Add(menuButton);
+        ListPauseButton.Add(upgradeButton);
         ListPauseButton.Add(retryButton);
         ListPauseButton.Add(resumeButton);
     }
@@ -182,13 +182,8 @@ public class PlayScreen : IScreen
     public void UpdatePlaying(GameTime gameTime)
     {
         var teclado = Keyboard.GetState();
-        if (teclado.IsKeyDown(Keys.Escape) && EscDelayAtual < 0)
-        {
-            GameStatus = GameStatus == GameStatusType.Paused ? GameStatusType.Playing : GameStatusType.Paused;
-            EscDelayAtual = EscDelay;
-        }
 
-        EscDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+        ValidatePause(gameTime);
 
         if (GameStatus == GameStatusType.Playing)
         {
@@ -211,7 +206,7 @@ public class PlayScreen : IScreen
                 PipeDelayAtual = PipeDelay;
             }
 
-            ValidarScore();
+            ValidateScore();
         }
         else if (GameStatus == GameStatusType.Paused)
         {
@@ -258,7 +253,7 @@ public class PlayScreen : IScreen
         Entities.Add(pipeBaixo);
     }
 
-    private void ValidarScore()
+    private void ValidateScore()
     {
         foreach (var entity in Entities)
         {
@@ -271,6 +266,18 @@ public class PlayScreen : IScreen
                 }
             }
         }
+    }
+
+    private void ValidatePause(GameTime gameTime)
+    {
+        var teclado = Keyboard.GetState();
+        if (teclado.IsKeyDown(Keys.Escape) && EscDelayAtual < 0)
+        {
+            GameStatus = GameStatus == GameStatusType.Paused ? GameStatusType.Playing : GameStatusType.Paused;
+            EscDelayAtual = EscDelay;
+        }
+
+        EscDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
     #region GameOver
@@ -287,6 +294,7 @@ public class PlayScreen : IScreen
 
     public void UpgradeButton()
     {
+        Exit();
         GlobalVariables.Game.ChangeScreen(ScreenCodesConst.UpgradeScreen);
     }
 
@@ -296,6 +304,7 @@ public class PlayScreen : IScreen
 
     public void UpdatePause(GameTime gameTime)
     {
+        ValidatePause(gameTime);
         ListPauseButton.ForEach(x => x.Update(gameTime));
     }
 

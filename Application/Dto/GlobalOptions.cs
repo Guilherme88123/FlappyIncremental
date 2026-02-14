@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Numerics;
 
 namespace Application.Dto;
 
 public static class GlobalOptions
 {
-    public static int MusicVolume { get; set; } = 50;
+    public static int MusicVolume { get; set; } = 0;
     public static int SfxVolume { get; set; } = 50;
     public static bool Fullscreen { get; set; } = false;
     public static int WidthSize { get; set; } = 1920;

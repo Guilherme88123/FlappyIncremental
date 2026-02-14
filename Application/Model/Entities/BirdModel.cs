@@ -120,11 +120,11 @@ public class BirdModel : BaseEntityModel
         var totalWidth = 1920;
         var totalHeight = 1080;
 
-        var x = 5;
-        var y = 50;
         var spacing = 3;
         var width = totalWidth / 5;
         var height = totalHeight / 20;
+        var x = totalWidth / 2 - width / 2;
+        var y = 10;
 
         var healthPercentage = (float)(Health / MaxHealth);
         var healthBarWidth = (int)(width * healthPercentage);
