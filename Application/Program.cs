@@ -1,13 +1,21 @@
-﻿using Application.Interface.Menu;
-using Application.Service.Menu;
-using Microsoft.Extensions.DependencyInjection;
-using FlappyIncremental.Dto;
-using Application.Interface.Screen;
+﻿using Application.Interface.Screen;
+using Application.Interface.Upgrade;
+using Application.Model.Upgrade.Definition.Base;
+using Application.Model.Upgrade.Definition.Score;
 using Application.Screen;
+using Application.Service.Upgrade;
+using FlappyIncremental.Dto;
+using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 
-services.AddSingleton<IMenuService, MenuService>();
+#region Dependency Injection
+
+#region Services
+
+services.AddSingleton<IUpgradeService, UpgradeService>();
+
+#endregion
 
 #region Screens
 
@@ -18,6 +26,14 @@ services.AddTransient<IScreen, UpgradeScreen>();
 services.AddTransient<PlayScreen>();
 services.AddTransient<MenuScreen>();
 services.AddTransient<UpgradeScreen>();
+
+#endregion
+
+#region Upgrades
+
+services.AddTransient<BaseUpgradeModel, ScoreUpgradeModel>();
+
+#endregion
 
 #endregion
 

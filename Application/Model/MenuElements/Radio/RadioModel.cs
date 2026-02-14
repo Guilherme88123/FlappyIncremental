@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Threading.Tasks.Sources;
 
-namespace Application.Model.MenuElements;
+namespace Application.Model.MenuElements.Radio;
 
 public class RadioModel : BaseElementModel
 {

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace Application.Model.MenuElements;
+namespace Application.Model.MenuElements.Switch;
 
 public class SwitchModel : BaseElementModel
 {

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace Application.Model.MenuElements;
+namespace Application.Model.MenuElements.Dropdown;
 
 public class DropdownModel : BaseElementModel
 {
@@ -84,7 +84,7 @@ public class DropdownModel : BaseElementModel
         foreach (var item in ListItens)
         {
             var x = Rectangle.X + border;
-            var y = Rectangle.Y + Rectangle.Height + (Rectangle.Height / 2) * item.Id;
+            var y = Rectangle.Y + Rectangle.Height + Rectangle.Height / 2 * item.Id;
             var width = Rectangle.Width - border * 2;
             var height = Rectangle.Height / 2;
 

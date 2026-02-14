@@ -4,11 +4,10 @@ using System.Linq;
 using Application.Const;
 using Application.Dto;
 using Application.Enum;
-using Application.Interface.Menu;
 using Application.Interface.Screen;
 using Application.Model.Entities;
-using Application.Model.MenuElements;
 using Application.Model.MenuElements.Base;
+using Application.Model.MenuElements.Button;
 using FlappyIncremental.Dto;
 using FlappyIncremental.Model.Entities.Base;
 using Microsoft.Xna.Framework;
@@ -28,8 +27,6 @@ public class PlayScreen : IScreen
     public readonly List<BaseEntityModel> Entities = new();
     public readonly List<BaseEntityModel> EntitiesToAdd = new();
 
-    private readonly IMenuService MenuService;
-
     private float EscDelay = 0.2f;
     private float EscDelayAtual = 0f;
 
@@ -45,11 +42,6 @@ public class PlayScreen : IScreen
     private SoundEffect GameOverSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("game_over");
 
     private List<BaseElementModel> ListPauseButton { get; set; } = new();
-
-    public PlayScreen()
-    {
-        MenuService = GlobalVariables.GetService<IMenuService>();
-    }
 
     #region Initialize
 
@@ -121,7 +113,7 @@ public class PlayScreen : IScreen
         var borderMenu = widthMenu / 10;
 
         var width = widthMenu - 2 * borderMenu;
-        var heigth = heightMenu / 5; 
+        var heigth = heightMenu / 5;
         var x = xMenu + borderMenu;
         var y = yMenu + heightMenu - borderMenu - heigth;
         var spacing = heigth / 10;
@@ -164,13 +156,13 @@ public class PlayScreen : IScreen
 
     public void Update(GameTime gameTime)
     {
-        if (GameStatus == GameStatusType.Playing) 
+        if (GameStatus == GameStatusType.Playing)
         {
             UpdatePlaying(gameTime);
             return;
         }
 
-        if (GameStatus == GameStatusType.Paused) 
+        if (GameStatus == GameStatusType.Paused)
         {
             UpdatePause(gameTime);
             return;
@@ -185,33 +177,26 @@ public class PlayScreen : IScreen
 
         ValidatePause(gameTime);
 
-        if (GameStatus == GameStatusType.Playing)
+        PipeDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (EntitiesToAdd.Any())
         {
-            PipeDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (EntitiesToAdd.Any())
-            {
-                Entities.AddRange(EntitiesToAdd);
-                EntitiesToAdd.Clear();
-            }
-
-            VerifyCollision();
-
-            Entities.ForEach(entity => entity.Update(gameTime, EntitiesToAdd));
-            Entities.RemoveAll(x => x.IsDestroyed);
-
-            if (PipeDelayAtual < 0)
-            {
-                GerarPipe();
-                PipeDelayAtual = PipeDelay;
-            }
-
-            ValidateScore();
+            Entities.AddRange(EntitiesToAdd);
+            EntitiesToAdd.Clear();
         }
-        else if (GameStatus == GameStatusType.Paused)
+
+        VerifyCollision();
+
+        Entities.ForEach(entity => entity.Update(gameTime, EntitiesToAdd));
+        Entities.RemoveAll(x => x.IsDestroyed);
+
+        if (PipeDelayAtual < 0)
         {
-            MenuService.Update(gameTime);
+            GerarPipe();
+            PipeDelayAtual = PipeDelay;
         }
+
+        ValidateScore();
     }
 
     private void VerifyCollision()
@@ -261,7 +246,7 @@ public class PlayScreen : IScreen
             {
                 if (!pipe.HasScored && pipe.Position.X + pipe.Size.X < 350)
                 {
-                    Score++;
+                    Score += GlobalStatus.ScoreGain;
                     pipe.HasScored = true;
                 }
             }

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace Application.Model.MenuElements;
+namespace Application.Model.MenuElements.Button;
 
 public class ButtonModel : BaseElementModel
 {

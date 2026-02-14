@@ -4,6 +4,9 @@ using Application.Enum;
 using Application.Interface.Screen;
 using Application.Model.MenuElements;
 using Application.Model.MenuElements.Base;
+using Application.Model.MenuElements.Button;
+using Application.Model.MenuElements.Button.UpgradeButtonModel;
+using Application.Model.Upgrade.Definition.Base;
 using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,10 +27,13 @@ public class UpgradeScreen : IScreen
 
     public Texture2D OverlayButton { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("button_overlay");
     public Texture2D OverlayMenu { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("menu_overlay");
+    public Texture2D OverlaySquareButton { get; set; } = GlobalVariables.Game.Content.Load<Texture2D>("square_button_overlay");
     private Rectangle OverlayMenuRect { get; set; }
 
     private List<BaseElementModel> ButtonList { get; set; } = new();
     private List<BaseElementModel> MenuButtonList { get; set; } = new();
+
+    private List<UpgradeButtonModel> UpgradeButtonList { get; set; } = new();
 
     #region Initialize
 
@@ -35,6 +41,7 @@ public class UpgradeScreen : IScreen
     {
         LoadButtons();
         LoadMenuButtons();
+        LoadUpgradeButtons();
     }
 
     public void LoadButtons()
@@ -101,6 +108,32 @@ public class UpgradeScreen : IScreen
         MenuButtonList.Add(resumeButton);
     }
 
+    public void LoadUpgradeButtons()
+    {
+        var windowWidth = GlobalOptions.WidthSize;
+        var windowHeight = GlobalOptions.HeightSize;
+
+        var height = windowHeight / 10;
+        var width = height;
+        var space = height / 2;
+
+        var upgrades = GlobalVariables.GetService<IEnumerable<BaseUpgradeModel>>();
+
+        foreach (var upgrade in upgrades )
+        {
+            var x = windowWidth / 2 - (space * upgrade.XPosition);
+            var y = windowHeight / 2 - (space * upgrade.YPosition);
+
+            var upgradeButton = new UpgradeButtonModel(upgrade)
+            {
+                Rectangle = new((int)x, (int)y, (int)width, (int)height),
+                Overlay = OverlaySquareButton,
+            };
+
+            UpgradeButtonList.Add(upgradeButton);
+        }
+    }
+
     public void StartGame()
     {
         GlobalVariables.Game.ChangeScreen(ScreenCodesConst.PlayScreen);
@@ -125,6 +158,7 @@ public class UpgradeScreen : IScreen
 
         ValidatePause(gameTime);
 
+        UpgradeButtonList.ForEach(x => x.Update(gameTime));
         ButtonList.ForEach(x => x.Update(gameTime));
     }
 
@@ -161,6 +195,7 @@ public class UpgradeScreen : IScreen
 
     public void Draw()
     {
+        UpgradeButtonList.ForEach(x => x.Draw());
         ButtonList.ForEach(x => x.Draw());
         DrawScore();
 
