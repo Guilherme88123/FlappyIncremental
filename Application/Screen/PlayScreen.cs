@@ -82,7 +82,7 @@ public class PlayScreen : IScreen
         var menuButton = new ButtonModel()
         {
             Rectangle = new((int)x, (int)y, (int)width, (int)heigth),
-            Click = () => UpgradeButton(),
+            Click = () => UpgradeLoseButton(),
             Text = "Upgrade",
             Overlay = OverlayButton,
             Color = Color.White,
@@ -277,9 +277,8 @@ public class PlayScreen : IScreen
         GlobalVariables.Game.ChangeScreen(ScreenCodesConst.PlayScreen);
     }
 
-    public void UpgradeButton()
+    public void UpgradeLoseButton()
     {
-        Exit();
         GlobalVariables.Game.ChangeScreen(ScreenCodesConst.UpgradeScreen);
     }
 
@@ -299,6 +298,12 @@ public class PlayScreen : IScreen
         {
             GameStatus = GameStatusType.Playing;
         }
+    }
+
+    public void UpgradeButton()
+    {
+        Exit();
+        GlobalVariables.Game.ChangeScreen(ScreenCodesConst.UpgradeScreen);
     }
 
     #endregion
