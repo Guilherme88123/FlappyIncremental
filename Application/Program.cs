@@ -1,6 +1,7 @@
 ﻿using Application.Interface.Screen;
 using Application.Interface.Upgrade;
 using Application.Model.Upgrade.Definition.Base;
+using Application.Model.Upgrade.Definition.Health;
 using Application.Model.Upgrade.Definition.Score;
 using Application.Screen;
 using Application.Service.Upgrade;
@@ -32,6 +33,7 @@ services.AddTransient<UpgradeScreen>();
 #region Upgrades
 
 services.AddTransient<BaseUpgradeModel, ScoreUpgradeModel>();
+services.AddTransient<BaseUpgradeModel, HealthUpgradeModel>();
 
 #endregion
 

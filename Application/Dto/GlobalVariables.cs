@@ -11,7 +11,8 @@ public static class GlobalVariables
 {
     public static GraphicsDeviceManager Graphics;
     public static Texture2D Pixel;
-    public static SpriteFont Font;
+    public static SpriteFont DefaultFont;
+    public static SpriteFont LittleFont;
 
     public static SpriteBatch SpriteBatchBackground;
     public static SpriteBatch SpriteBatchEntities;

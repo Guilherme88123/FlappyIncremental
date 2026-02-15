@@ -53,13 +53,13 @@ public class BaseElementModel
         }
     }
 
-    protected void DrawText(string text)
+    protected virtual void DrawText(string text)
     {
-        var textSize = GlobalVariables.Font.MeasureString(text);
+        var textSize = GlobalVariables.DefaultFont.MeasureString(text);
         var textPosition = new Vector2(
             Rectangle.X + (Rectangle.Width - textSize.X) / 2,
             Rectangle.Y + (Rectangle.Height - textSize.Y) / 2);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, text, textPosition, Color.White);
     }
 
     protected void DrawRectangle()

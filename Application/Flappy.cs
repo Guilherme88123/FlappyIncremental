@@ -46,7 +46,8 @@ public class Flappy : Game
         var pixel = new Texture2D(GraphicsDevice, 1, 1);
         pixel.SetData([Color.White]);
 
-        GlobalVariables.Font = Content.Load<SpriteFont>("DefaultFont");
+        GlobalVariables.DefaultFont = Content.Load<SpriteFont>("DefaultFont");
+        GlobalVariables.LittleFont = Content.Load<SpriteFont>("LittleFont");
         GlobalVariables.SpriteBatchBackground = spriteBatchBackground;
         GlobalVariables.SpriteBatchEntities = spriteBatchEntities;
         GlobalVariables.SpriteBatchInterface = spriteBatchInterface;

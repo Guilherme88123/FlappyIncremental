@@ -121,13 +121,14 @@ public class UpgradeScreen : IScreen
 
         foreach (var upgrade in upgrades )
         {
-            var x = windowWidth / 2 - (space * upgrade.XPosition);
-            var y = windowHeight / 2 - (space * upgrade.YPosition);
+            var x = windowWidth / 2 - ((width / 2) + (space * upgrade.XPosition + width * upgrade.XPosition));
+            var y = windowHeight / 2 - ((height / 2) + (space * upgrade.YPosition + height * upgrade.YPosition));
 
             var upgradeButton = new UpgradeButtonModel(upgrade)
             {
                 Rectangle = new((int)x, (int)y, (int)width, (int)height),
                 Overlay = OverlaySquareButton,
+                HoverOverlay = OverlayMenu,
             };
 
             UpgradeButtonList.Add(upgradeButton);
@@ -204,7 +205,7 @@ public class UpgradeScreen : IScreen
 
     private void DrawScore()
     {
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, $"Score: {GlobalStatus.TotalScore}", new Vector2(20, 20), Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, $"Score: {GlobalStatus.TotalScore}", new Vector2(20, 20), Color.White);
     }
 
     private void DrawMenu()

@@ -116,12 +116,12 @@ public class DropdownModel : BaseElementModel
     {
         foreach (var item in ListItens)
         {
-            var textSize = GlobalVariables.Font.MeasureString(item.Text);
+            var textSize = GlobalVariables.DefaultFont.MeasureString(item.Text);
 
             var x = item.Rectangle.X + item.Rectangle.Width / 2 - textSize.X / 2;
             var y = item.Rectangle.Y + item.Rectangle.Height / 2 - textSize.Y / 2;
 
-            GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, item.Text, new(x, y), Color.White);
+            GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, item.Text, new(x, y), Color.White);
         }
     }
 

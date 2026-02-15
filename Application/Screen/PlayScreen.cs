@@ -26,7 +26,7 @@ public class PlayScreen : IScreen
 
     public readonly List<BaseEntityModel> Entities = new();
     public readonly List<BaseEntityModel> EntitiesToAdd = new();
-
+       
     private float EscDelay = 0.2f;
     private float EscDelayAtual = 0f;
 
@@ -334,7 +334,7 @@ public class PlayScreen : IScreen
 
     public void DrawScore()
     {
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, $"Score: {Score}", new Vector2(20, 20), Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, $"Score: {Score}", new Vector2(20, 20), Color.White);
     }
 
     public void DrawPausedInterface()
@@ -380,8 +380,8 @@ public class PlayScreen : IScreen
         var text = "Game Over";
         var finalScore = $"Final Score: {Score}";
 
-        var textSize = GlobalVariables.Font.MeasureString(text);
-        var finalScoreSize = GlobalVariables.Font.MeasureString(finalScore);
+        var textSize = GlobalVariables.DefaultFont.MeasureString(text);
+        var finalScoreSize = GlobalVariables.DefaultFont.MeasureString(finalScore);
 
         var yMenu = OverlayRect.Y;
         var borderMenu = (OverlayRect.Width) / 10;
@@ -389,8 +389,8 @@ public class PlayScreen : IScreen
         var textPosition = new Vector2((width - textSize.X) / 2, yMenu + borderMenu);
         var finalScorePosition = new Vector2((width - finalScoreSize.X) / 2, yMenu + borderMenu * 2);
 
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, finalScore, finalScorePosition, Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, text, textPosition, Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, finalScore, finalScorePosition, Color.White);
     }
 
     #endregion
@@ -404,14 +404,14 @@ public class PlayScreen : IScreen
 
         var text = $"Current Score: {Score}";
 
-        var textSize = GlobalVariables.Font.MeasureString(text);
+        var textSize = GlobalVariables.DefaultFont.MeasureString(text);
 
         var yMenu = OverlayRect.Y;
         var borderMenu = (OverlayRect.Width) / 10;
 
         var textPosition = new Vector2((width - textSize.X) / 2, yMenu + borderMenu);
 
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, Color.White);
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, text, textPosition, Color.White);
     }
 
     #endregion

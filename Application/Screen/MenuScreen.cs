@@ -274,7 +274,7 @@ public class MenuScreen : IScreen
 
         var textPosition = new Vector2(15, height - 25);
 
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.Font, text, textPosition, 
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, text, textPosition, 
             Microsoft.Xna.Framework.Color.White);
     }
 

@@ -80,6 +80,13 @@
 /processorParam:Quality=Best
 /build:jump.wav
 
+#begin LittleFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:LittleFont.spritefont
+
 #begin menu_overlay.png
 /importer:TextureImporter
 /processor:TextureProcessor

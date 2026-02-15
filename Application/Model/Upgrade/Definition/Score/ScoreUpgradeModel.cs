@@ -8,7 +8,7 @@ public class ScoreUpgradeModel : BaseUpgradeModel
     public ScoreUpgradeModel()
     {
         Id = 0;
-        Name = "More Score";
+        Name = "Score++";
         Description = "Your first upgrade! \nThis increment your score gain on Game :)";
         MaxLevel = 10;
         BasePrice = 5;

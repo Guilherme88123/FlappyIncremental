@@ -24,8 +24,7 @@ public class BirdModel : BaseEntityModel
 
     private SoundEffect JumpSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("jump");
 
-    public const decimal MaxHealth = 100;
-    public decimal Health { get; set; } = MaxHealth;
+    public decimal Health { get; set; } = GlobalStatus.MaxHealth;
 
     public BirdModel((float x, float y) position) : base(position)
     {
@@ -126,7 +125,7 @@ public class BirdModel : BaseEntityModel
         var x = totalWidth / 2 - width / 2;
         var y = 10;
 
-        var healthPercentage = (float)(Health / MaxHealth);
+        var healthPercentage = (float)(Health / GlobalStatus.MaxHealth);
         var healthBarWidth = (int)(width * healthPercentage);
 
         Rectangle backgroundRect = new(x, y, width, height);
