@@ -21,6 +21,9 @@ public class Flappy : Game
 
     private Song Music {  get; set; }
 
+    private Effect CrtEffect { get; set; }
+    private RenderTarget2D RtCrtEffect { get; set; }
+
     public Flappy()
     {
         var graphics = new GraphicsDeviceManager(this);
@@ -56,6 +59,30 @@ public class Flappy : Game
         Music = Content.Load<Song>("back_music");
         MediaPlayer.Volume = GlobalOptions.MusicVolumeFloat;
         MediaPlayer.Play(Music);
+
+        CrtEffect = Content.Load<Effect>("crt-lottes-mg"); 
+        CrtEffect.Parameters["hardScan"]?.SetValue(-8.0f);
+        CrtEffect.Parameters["hardPix"]?.SetValue(-3.0f);
+        CrtEffect.Parameters["warpX"]?.SetValue(0.031f);
+        CrtEffect.Parameters["warpY"]?.SetValue(0.041f);
+        CrtEffect.Parameters["maskDark"]?.SetValue(0.5f);
+        CrtEffect.Parameters["maskLight"]?.SetValue(1.5f);
+        CrtEffect.Parameters["scaleInLinearGamma"]?.SetValue(1.0f);
+        CrtEffect.Parameters["shadowMask"]?.SetValue(3.0f);
+        CrtEffect.Parameters["brightboost"]?.SetValue(1.0f);
+        CrtEffect.Parameters["hardBloomScan"]?.SetValue(-1.5f);
+        CrtEffect.Parameters["hardBloomPix"]?.SetValue(-2.0f);
+        CrtEffect.Parameters["bloomAmount"]?.SetValue(0.15f);
+        CrtEffect.Parameters["shape"]?.SetValue(2.0f);
+
+        CrtEffect.Parameters["textureSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
+        CrtEffect.Parameters["videoSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
+        CrtEffect.Parameters["outputSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
+
+        RtCrtEffect = new RenderTarget2D(GraphicsDevice,
+            GlobalOptions.WidthSize, GlobalOptions.HeightSize);
+
+        GraphicsDevice.SetRenderTarget(RtCrtEffect);
     }
 
     protected override void Initialize()
@@ -84,17 +111,35 @@ public class Flappy : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        var color = new Color(25, 25, 20);
-        GlobalVariables.Graphics.GraphicsDevice.Clear(color);
+        var color = Color.Black;
 
-        GlobalVariables.SpriteBatchBackground.Begin();
+        GraphicsDevice.Clear(color);
+        GraphicsDevice.SetRenderTarget(RtCrtEffect);
+        GraphicsDevice.Clear(color);
+
+        //GlobalVariables.SpriteBatchBackground.Begin();
         GlobalVariables.SpriteBatchEntities.Begin(transformMatrix: GetScreenScaleMatrix());
         GlobalVariables.SpriteBatchInterface.Begin();
 
         ActualScreen.Draw();
 
-        GlobalVariables.SpriteBatchBackground.End();
+        //GlobalVariables.SpriteBatchBackground.End();
         GlobalVariables.SpriteBatchEntities.End();
+        GlobalVariables.SpriteBatchInterface.End();
+
+        GraphicsDevice.SetRenderTarget(null);
+
+        GlobalVariables.SpriteBatchInterface.Begin(
+            samplerState: SamplerState.LinearClamp,
+            effect: CrtEffect
+        );
+
+        GlobalVariables.SpriteBatchInterface.Draw(
+            RtCrtEffect,
+            new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height),
+            Color.White
+        );
+
         GlobalVariables.SpriteBatchInterface.End();
 
         base.Draw(gameTime);
