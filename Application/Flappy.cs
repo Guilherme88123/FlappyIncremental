@@ -32,7 +32,7 @@ public class Flappy : Game
         graphics.HardwareModeSwitch = false;
         graphics.IsFullScreen = GlobalOptions.Fullscreen;
         IsFixedTimeStep = true; 
-        TargetElapsedTime = TimeSpan.FromSeconds(1d / 120d);
+        TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         graphics.ApplyChanges();
@@ -75,14 +75,13 @@ public class Flappy : Game
         CrtEffect.Parameters["bloomAmount"]?.SetValue(0.15f);
         CrtEffect.Parameters["shape"]?.SetValue(2.0f);
 
-        CrtEffect.Parameters["textureSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
-        CrtEffect.Parameters["videoSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
-        CrtEffect.Parameters["outputSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
+        //CrtEffect.Parameters["textureSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
+        //CrtEffect.Parameters["videoSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
+        //CrtEffect.Parameters["outputSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));
 
-        RtCrtEffect = new RenderTarget2D(GraphicsDevice,
-            GlobalOptions.WidthSize, GlobalOptions.HeightSize);
+        RtCrtEffect = new RenderTarget2D(GraphicsDevice, 1920, 1080);
 
-        GraphicsDevice.SetRenderTarget(RtCrtEffect);
+        //GraphicsDevice.SetRenderTarget(RtCrtEffect);
     }
 
     protected override void Initialize()
@@ -98,6 +97,7 @@ public class Flappy : Game
         ActualScreen.Update(gameTime);
 
         UpdateMouseState();
+        UpdateTextureEffect();
         
         base.Update(gameTime);
     }
@@ -109,6 +109,16 @@ public class Flappy : Game
         GlobalVariables.IsMouseDown = mouse.LeftButton == ButtonState.Pressed;
     }
 
+    private void UpdateTextureEffect()
+    {
+        int rtWidth = RtCrtEffect.Width;  // 960
+        int rtHeight = RtCrtEffect.Height; // 540
+
+        CrtEffect.Parameters["textureSize"].SetValue(new Vector2(rtWidth, rtHeight));  // Tamanho do RenderTarget
+        CrtEffect.Parameters["videoSize"].SetValue(new Vector2(GlobalOptions.WidthSize, GlobalOptions.HeightSize));    // Mesma coisa pro video
+        CrtEffect.Parameters["outputSize"].SetValue(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height)); // Tela final
+    }
+
     protected override void Draw(GameTime gameTime)
     {
         var color = Color.Black;
@@ -117,13 +127,13 @@ public class Flappy : Game
         GraphicsDevice.SetRenderTarget(RtCrtEffect);
         GraphicsDevice.Clear(color);
 
-        //GlobalVariables.SpriteBatchBackground.Begin();
+        GlobalVariables.SpriteBatchBackground.Begin();
         GlobalVariables.SpriteBatchEntities.Begin(transformMatrix: GetScreenScaleMatrix());
         GlobalVariables.SpriteBatchInterface.Begin();
 
         ActualScreen.Draw();
 
-        //GlobalVariables.SpriteBatchBackground.End();
+        GlobalVariables.SpriteBatchBackground.End();
         GlobalVariables.SpriteBatchEntities.End();
         GlobalVariables.SpriteBatchInterface.End();
 
@@ -136,7 +146,7 @@ public class Flappy : Game
 
         GlobalVariables.SpriteBatchInterface.Draw(
             RtCrtEffect,
-            new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height),
+            new Rectangle(0, 0, GlobalOptions.WidthSize, GlobalOptions.HeightSize),
             Color.White
         );
 
