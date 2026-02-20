@@ -127,7 +127,7 @@ public class Flappy : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        GlobalVariables.SpriteBatchBackground.Begin();
+        GlobalVariables.SpriteBatchBackground.Begin(transformMatrix: GlobalVariables.CameraOffset);
         GlobalVariables.SpriteBatchEntities.Begin(transformMatrix: GetScreenScaleMatrix());
         GlobalVariables.SpriteBatchInterface.Begin(effect: CrtEffect);
 

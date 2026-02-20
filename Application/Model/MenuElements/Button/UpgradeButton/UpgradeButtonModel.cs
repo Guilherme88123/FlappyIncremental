@@ -1,10 +1,11 @@
-﻿using System.Runtime.InteropServices;
-using Application.Interface.Upgrade;
+﻿using Application.Interface.Upgrade;
 using Application.Model.Upgrade.Definition.Base;
 using Application.Model.Upgrade.State;
 using FlappyIncremental.Dto;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Runtime.InteropServices;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Application.Model.MenuElements.Button.UpgradeButtonModel;
@@ -42,10 +43,23 @@ public class UpgradeButtonModel : ButtonModel
         Price = manager.GetPrice(Upgrade.Id);
     }
 
+    protected override bool IsHovering()
+    {
+        var mouse = Mouse.GetState();
+        Vector2 mouseScreen = new(mouse.X, mouse.Y);
+
+        Matrix inv = Matrix.Invert(GlobalVariables.CameraOffset);
+        Vector2 mouseWorld = Vector2.Transform(mouseScreen, inv);
+
+        return Rectangle.Contains(mouseWorld);
+    }
+
     protected override string GetText() => Upgrade.Name;
 
     protected override void DrawText(string text)
     {
+        SpriteBatch = SpriteBatch is null ? GlobalVariables.SpriteBatchInterface : SpriteBatch;
+
         var upgradeName = text;
         var cost = State.ActualLevel == Upgrade.MaxLevel ? "Max" : $"${Price}";
 
@@ -60,8 +74,8 @@ public class UpgradeButtonModel : ButtonModel
             Rectangle.X + Rectangle.Width / 2 - costSize.X / 2,
             Rectangle.Y + (Rectangle.Height / 3) * 2 - costSize.Y / 2);
 
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.LittleFont, upgradeName, upgradeNamePosition, Color.White);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.LittleFont, cost, costSizePosition, Color.White);
+        SpriteBatch.DrawString(GlobalVariables.LittleFont, upgradeName, upgradeNamePosition, Color.White);
+        SpriteBatch.DrawString(GlobalVariables.LittleFont, cost, costSizePosition, Color.White);
     }
 
     public override void Draw()
@@ -79,6 +93,8 @@ public class UpgradeButtonModel : ButtonModel
 
     private void DrawHoverOverlay()
     {
+        SpriteBatch = SpriteBatch is null ? GlobalVariables.SpriteBatchInterface : SpriteBatch;
+
         var width = Rectangle.Width * 5;
         var height = Rectangle.Height * 3;
         var x = Rectangle.X + Rectangle.Width / 2 - width / 2;
@@ -89,7 +105,7 @@ public class UpgradeButtonModel : ButtonModel
         var scaleX = (float)width / HoverOverlay.Width;
         var scaleY = (float)height / HoverOverlay.Height;
 
-        GlobalVariables.SpriteBatchInterface.Draw(
+        SpriteBatch.Draw(
             HoverOverlay,
             new(x, (float)y),
             null,
@@ -103,6 +119,8 @@ public class UpgradeButtonModel : ButtonModel
 
     private void DrawHoverText()
     {
+        SpriteBatch = SpriteBatch is null ? GlobalVariables.SpriteBatchInterface : SpriteBatch;
+
         var upgradeName = Upgrade.Name;
         var upgradeDescription = Upgrade.Description;
         var cost = State.ActualLevel == Upgrade.MaxLevel ? "Max" : $"${Price}";
@@ -131,9 +149,9 @@ public class UpgradeButtonModel : ButtonModel
             HoverOverlayRect.X + HoverOverlayRect.Width - (levelSize.X + border * 2),
             HoverOverlayRect.Y + HoverOverlayRect.Height - (levelSize.Y + border));
 
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, upgradeName, upgradeNamePosition, Color.White);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, upgradeDescription, upgradeDescriptionPosition, Color.White);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, cost, costPosition, Color.White);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, level, levelPosition, Color.White);
+        SpriteBatch.DrawString(GlobalVariables.DefaultFont, upgradeName, upgradeNamePosition, Color.White);
+        SpriteBatch.DrawString(GlobalVariables.DefaultFont, upgradeDescription, upgradeDescriptionPosition, Color.White);
+        SpriteBatch.DrawString(GlobalVariables.DefaultFont, cost, costPosition, Color.White);
+        SpriteBatch.DrawString(GlobalVariables.DefaultFont, level, levelPosition, Color.White);
     }
 }

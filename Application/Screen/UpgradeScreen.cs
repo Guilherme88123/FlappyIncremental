@@ -35,6 +35,10 @@ public class UpgradeScreen : IScreen
 
     private List<UpgradeButtonModel> UpgradeButtonList { get; set; } = new();
 
+    private Vector2 LastMousePosition;
+    private bool IsRightDragging = false; 
+    private int _previousScrollWheel;
+
     #region Initialize
 
     public void Initialize()
@@ -129,6 +133,7 @@ public class UpgradeScreen : IScreen
                 Rectangle = new((int)x, (int)y, (int)width, (int)height),
                 Overlay = OverlaySquareButton,
                 HoverOverlay = OverlayMenu,
+                SpriteBatch = GlobalVariables.SpriteBatchBackground,
             };
 
             UpgradeButtonList.Add(upgradeButton);
@@ -137,11 +142,13 @@ public class UpgradeScreen : IScreen
 
     public void StartGame()
     {
+        ResetCamera();
         GlobalVariables.Game.ChangeScreen(ScreenCodesConst.PlayScreen);
     }
 
     public void ReturnMenu()
     {
+        ResetCamera();
         GlobalVariables.Game.ChangeScreen(ScreenCodesConst.MenuScreen);
     }
 
@@ -158,6 +165,7 @@ public class UpgradeScreen : IScreen
         }
 
         ValidatePause(gameTime);
+        UpdateCamera(gameTime);
 
         UpgradeButtonList.ForEach(x => x.Update(gameTime));
         ButtonList.ForEach(x => x.Update(gameTime));
@@ -180,6 +188,63 @@ public class UpgradeScreen : IScreen
         EscDelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
+    private void UpdateCamera(GameTime gameTime)
+    {
+        var mouse = Mouse.GetState();
+        var currentMousePos = new Vector2(mouse.X, mouse.Y);
+
+        if (mouse.LeftButton == ButtonState.Pressed)
+        {
+            if (!IsRightDragging)
+            {
+                IsRightDragging = true;
+                LastMousePosition = currentMousePos;
+            }
+            else
+            {
+                Vector2 delta = LastMousePosition - currentMousePos;
+                GlobalVariables.CameraPosition += delta * 1f / GlobalVariables.CameraZoom;
+
+                LastMousePosition = currentMousePos;
+            }
+        }
+        else
+        {
+            IsRightDragging = false;
+        }
+
+        int scrollDelta = mouse.ScrollWheelValue - _previousScrollWheel;
+        if (scrollDelta != 0)
+        {
+            Vector2 mouseScreen = new Vector2(mouse.X, mouse.Y);
+
+            Vector2 mouseBefore = Vector2.Transform(mouseScreen, Matrix.Invert(GlobalVariables.CameraOffset));
+
+            GlobalVariables.CameraZoom += scrollDelta > 0 ? 0.2f : -0.2f;
+            GlobalVariables.CameraZoom = Math.Clamp(GlobalVariables.CameraZoom, 0.2f, 3.0f);
+
+            Vector2 mouseAfter = Vector2.Transform(mouseScreen, Matrix.Invert(GlobalVariables.CameraOffset));
+
+            var delta = mouseBefore - mouseAfter;
+            GlobalVariables.CameraPosition += delta;
+
+            _previousScrollWheel = mouse.ScrollWheelValue;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.R))
+        {
+            ResetCamera();
+        }
+    }
+
+    private void ResetCamera()
+    {
+        GlobalVariables.CameraPosition = Vector2.Zero;
+        GlobalVariables.CameraZoom = 1.0f;
+    }
+
+    private bool IsCameraAltered() => GlobalVariables.CameraPosition != Vector2.Zero || GlobalVariables.CameraZoom != 1.0f;
+
     #region Menu
 
     private void UpdateMenu(GameTime gameTime)
@@ -201,11 +266,21 @@ public class UpgradeScreen : IScreen
         DrawScore();
 
         if (IsMenuOpen) DrawMenu();
+        if (IsCameraAltered()) DrawHelpCamera();
     }
 
     private void DrawScore()
     {
         GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, $"Score: {GlobalStatus.TotalScore}", new Vector2(20, 20), Color.White);
+    }
+
+    private void DrawHelpCamera()
+    {
+        var text = "Press 'R' To Reset Camera";
+
+        var textSize = GlobalVariables.DefaultFont.MeasureString(text);
+
+        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, text, new Vector2(10, GlobalOptions.HeightSize - (textSize.Y + 10)), Color.White);
     }
 
     private void DrawMenu()
@@ -239,6 +314,7 @@ public class UpgradeScreen : IScreen
 
     public void Exit()
     {
+
     }
 
     #endregion

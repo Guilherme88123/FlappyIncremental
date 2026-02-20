@@ -24,14 +24,21 @@ public class BaseElementModel
 
     protected SoundEffect ClickSound { get; set; } = GlobalVariables.Game.Content.Load<SoundEffect>("button_click");
 
+    public SpriteBatch SpriteBatch { get; set; }
+
     public virtual void Update(GameTime gameTime)
     {
-        var mouse = Mouse.GetState();
-        var mousePos = new Point(mouse.X, mouse.Y);
-
         DelayAtual -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        IsHover = Rectangle.Contains(mousePos);
+        IsHover = IsHovering();
+    }
+
+    protected virtual bool IsHovering()
+    {
+        var mouse = Mouse.GetState();
+        Vector2 mouseScreen = new(mouse.X, mouse.Y);
+
+        return Rectangle.Contains(mouseScreen);
     }
 
     public virtual void Draw()
@@ -55,26 +62,32 @@ public class BaseElementModel
 
     protected virtual void DrawText(string text)
     {
+        SpriteBatch = SpriteBatch is null ? GlobalVariables.SpriteBatchInterface : SpriteBatch;
+
         var textSize = GlobalVariables.DefaultFont.MeasureString(text);
         var textPosition = new Vector2(
             Rectangle.X + (Rectangle.Width - textSize.X) / 2,
             Rectangle.Y + (Rectangle.Height - textSize.Y) / 2);
-        GlobalVariables.SpriteBatchInterface.DrawString(GlobalVariables.DefaultFont, text, textPosition, Color.White);
+        SpriteBatch.DrawString(GlobalVariables.DefaultFont, text, textPosition, Color.White);
     }
 
     protected void DrawRectangle()
     {
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, Rectangle, IsHover ? HoverColor : Color);
+        SpriteBatch = SpriteBatch is null ? GlobalVariables.SpriteBatchInterface : SpriteBatch;
+
+        SpriteBatch.Draw(GlobalVariables.Pixel, Rectangle, IsHover ? HoverColor : Color);
     }
 
     protected void DrawOverlay()
     {
+        SpriteBatch = SpriteBatch is null ? GlobalVariables.SpriteBatchInterface : SpriteBatch;
+
         var scaleX = (float)Rectangle.Width / (float)Overlay.Width;
         var scaleY = (float)Rectangle.Height / (float)Overlay.Height;
 
         var position = new Vector2(Rectangle.X, Rectangle.Y);
 
-        GlobalVariables.SpriteBatchInterface.Draw(
+        SpriteBatch.Draw(
             Overlay,
             position,
             null,

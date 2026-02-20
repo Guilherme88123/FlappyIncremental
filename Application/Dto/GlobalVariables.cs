@@ -28,4 +28,8 @@ public static class GlobalVariables
         => ServiceProvider.GetRequiredService<T>();
 
     public static object GetService(Type type) => ServiceProvider.GetRequiredService(type);
+
+    public static Vector2 CameraPosition { get; set; } = Vector2.Zero;
+    public static float CameraZoom { get; set; } = 1.0f;
+    public static Matrix CameraOffset => Matrix.CreateScale(CameraZoom) * Matrix.CreateTranslation(-CameraPosition.X, -CameraPosition.Y, 0f);
 }
