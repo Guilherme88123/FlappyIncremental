@@ -129,10 +129,11 @@ public class MenuScreen : IScreen
             ValueUpdate = UpdateWindowSize,
             ListItens = new List<DropdownItemDto>()
             {
-                new() { Id = 0, Text = "800x600", Value = new Vector2(800, 600) },
-                new() { Id = 1, Text = "1280x720", Value = new Vector2(1280, 720) },
-                new() { Id = 2, Text = "1600x900", Value = new Vector2(1600, 900) },
-                new() { Id = 3, Text = "1920x1080", Value = new Vector2(1920, 1080) },
+                new() { Id = 0, Text = "640x480", Value = new Vector2(640, 480) },
+                new() { Id = 1, Text = "800x600", Value = new Vector2(800, 600) },
+                new() { Id = 2, Text = "1280x720", Value = new Vector2(1280, 720) },
+                new() { Id = 3, Text = "1600x900", Value = new Vector2(1600, 900) },
+                new() { Id = 4, Text = "1920x1080", Value = new Vector2(1920, 1080) },
             },
         };
 

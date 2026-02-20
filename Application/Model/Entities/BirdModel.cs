@@ -131,8 +131,8 @@ public class BirdModel : BaseEntityModel
         Rectangle backgroundRect = new(x, y, width, height);
         Rectangle healthRect = new(x + spacing, y + spacing, healthBarWidth - spacing * 2, height - spacing * 2);
 
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, backgroundRect, Color.DarkGray);
-        GlobalVariables.SpriteBatchInterface.Draw(GlobalVariables.Pixel, healthRect, Color.Red);
+        GlobalVariables.SpriteBatchEntities.Draw(GlobalVariables.Pixel, backgroundRect, Color.DarkGray);
+        GlobalVariables.SpriteBatchEntities.Draw(GlobalVariables.Pixel, healthRect, Color.Red);
     }
 
     public override void Destroy()
